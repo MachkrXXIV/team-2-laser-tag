@@ -1,7 +1,7 @@
 from .team import Team
 from .player import Player
-from .udp import Udp
 from queue import PriorityQueue
+from game.graceful_thread import GracefulThread
 
 TEAM_PLAYERS_MAX = 15
 
@@ -29,6 +29,14 @@ class GameManager:
         self._initialized = True
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
+
+        # for i in range(15):  # For Testing purposes
+        #     red_player = Player(i, f"red{i}")
+        #     red_player.equipment_id = i
+        #     green_player = Player(i + 6, f"green{i+6}")
+        #     green_player.equipment_id = i + 6
+        #     self.__red_team.add_player_to_team(red_player)
+        #     self.__green_team.add_player_to_team(green_player)
 
         self.__red_leaderboard = PriorityQueue(
             TEAM_PLAYERS_MAX
@@ -101,6 +109,14 @@ class GameManager:
         del self.__green_team
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
+
+    def get_winning_team(self) -> Team:
+        if self.__red_team.points > self.__green_team.points:
+            return self.__red_team
+        elif self.__red_team.points < self.__green_team.points:
+            return self.__green_team
+        else:
+            return None
 
     def adjust_leaderboard(self, team_name: str) -> None:
         """
