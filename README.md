@@ -2,11 +2,13 @@
 
 # Installation
 
-Requirements
+### Requirements
 - Python 3.12+
 - git
 
-Setup
+### Setup
 1. Install dependencies
-    - python3 -m pip install --upgrade pip
-    - python3 -m pip install --upgrade Pillow
+    ```bash
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade Pillow
+   ```
