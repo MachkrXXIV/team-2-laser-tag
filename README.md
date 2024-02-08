@@ -7,7 +7,7 @@ Group project for the software engineering class of Spring 2024.
 | -------------- | -------------- |
 | Justin Mach    | MachkrXXIV     |
 | Margaret Milne | username       |
-| Sarim Khan     | username       |
+| Sarim Khan     | sarimk0403     |
 | Kalaya Samuel  | ksamuel03      |
 
 # Installation
