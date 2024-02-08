@@ -1,4 +1,6 @@
 # Team 2's Laser Tag Project - CSCE 3513
+Group project for the software engineering class of Spring 2024. 
+Members: Justin Mach, Margaret Milne, Sarim Khan, Kalaya Samuel
 
 # Installation
 
