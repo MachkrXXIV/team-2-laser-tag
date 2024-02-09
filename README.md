@@ -22,3 +22,8 @@ Group project for the software engineering class of Spring 2024.
     python3 -m pip install --upgrade pip
     python3 -m pip install --upgrade Pillow
    ```
+
+### To Run
+```bash
+    python3 main.py
+   ```
