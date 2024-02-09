@@ -6,7 +6,7 @@ Group project for the software engineering class of Spring 2024.
 | Real Names     | Github Names   |
 | -------------- | -------------- |
 | Justin Mach    | MachkrXXIV     |
-| Margaret Milne | username       |
+| Margaret Milne | margaretmilne  |
 | Sarim Khan     | sarimk0403     |
 | Kalaya Samuel  | ksamuel03      |
 
