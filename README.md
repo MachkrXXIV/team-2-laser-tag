@@ -26,17 +26,21 @@ Group project for the software engineering class of Spring 2024.
    ```
 
 2. Create virtual environment (recommended)
+
    #### Windows
+
    ```bash
-   python -m venv myenv
+   python -m venv venv
    myenv\Scripts\activate
    ```
 
    #### MacOS/Linux
+
    ```bash
-   python -m venv myenv
+   python -m venv venv
    source myenv/bin/activate
    ```
+
 3. Install dependencies
    ```bash
    pip install -r requirements.txt
