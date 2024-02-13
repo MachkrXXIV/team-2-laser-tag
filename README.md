@@ -38,7 +38,7 @@ Group project for the software engineering class of Spring 2024.
 
    ```bash
    python -m venv venv
-   source myenv/bin/activate
+   source venv/bin/activate
    ```
 
 3. Install dependencies
