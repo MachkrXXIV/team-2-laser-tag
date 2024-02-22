@@ -31,7 +31,7 @@ Group project for the software engineering class of Spring 2024.
 
    ```bash
    python -m venv venv
-   myenv\Scripts\activate
+   venv\bin\activate
    ```
 
    #### MacOS/Linux
