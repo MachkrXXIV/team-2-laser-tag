@@ -27,8 +27,8 @@ class PlayerEntry:
 
 
     def create_player_entries(self, parent_frame, team):
-        ttk.Label(parent_frame, text="Player Names".format(team)).grid(row=1, column=2, sticky="w", padx=5, pady=(5,0), columnspan=2)
-        ttk.Label(parent_frame, text="User ID").grid(row=1, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2) 
+        ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2) 
+        ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=2, sticky="w", padx=5, pady=(5,0), columnspan=2)
         
         for i in range(1, 16):  # Assuming 5 players per team
             ttk.Label(parent_frame, text="{}: ".format(i)).grid(row=i+1, column=0, padx=5, pady=5, sticky="e")
