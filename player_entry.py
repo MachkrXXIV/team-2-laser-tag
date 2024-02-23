@@ -29,20 +29,23 @@ class PlayerEntry:
     def create_player_entries(self, parent_frame, team):
         ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=2, sticky="w", padx=5, pady=(5,0), columnspan=2)
         ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2) 
-        
+
         # Store player entries in a list for easier management
         self.player_entries = []
-
+        self.player_counts = {'Red': 1, 'Green': 1}
 
         def add_player():
+            
             # Create new player entry fields
             entry = ttk.Entry(parent_frame, width=20)
             entry.grid(row=len(self.player_entries) + 2, column=2, padx=5, pady=5, sticky="w")
             
             entry_id = ttk.Entry(parent_frame, width=20)
             entry_id.grid(row=len(self.player_entries) + 2, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2)
-            
-            ttk.Label(parent_frame, text="{}: ".format(len(self.player_entries) + 1)).grid(row=len(self.player_entries) + 2, column=0, padx=5, pady=5, sticky="e")
+
+            player_number = self.player_counts[team]  # Get the current player count for the team
+            ttk.Label(parent_frame, text="{}: ".format(player_number)).grid(row=len(self.player_entries) + 2, column=0, padx=5, pady=5, sticky="e")            
+            self.player_counts[team] += 1  # Increment the player count for the team
             
             # Append the new player entry fields to the list
             self.player_entries.append((entry, entry_id))
