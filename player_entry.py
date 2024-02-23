@@ -27,43 +27,67 @@ class PlayerEntry:
 
 
     def create_player_entries(self, parent_frame, team):
-        ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2) 
         ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=2, sticky="w", padx=5, pady=(5,0), columnspan=2)
+        ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2) 
         
-        for i in range(1):
+        # Store player entries in a list for easier management
+        self.player_entries = []
+
+
+        def add_player():
+            # Create new player entry fields
+            entry = ttk.Entry(parent_frame, width=20)
+            entry.grid(row=len(self.player_entries) + 2, column=2, padx=5, pady=5, sticky="w")
+            
+            entry_id = ttk.Entry(parent_frame, width=20)
+            entry_id.grid(row=len(self.player_entries) + 2, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2)
+            
+            ttk.Label(parent_frame, text="{}: ".format(len(self.player_entries) + 1)).grid(row=len(self.player_entries) + 2, column=0, padx=5, pady=5, sticky="e")
+            
+            # Append the new player entry fields to the list
+            self.player_entries.append((entry, entry_id))
+
+        # Initial creation of player entry fields
+        add_player()
+
+        # Button to add more players
+        ttk.Button(parent_frame, text="Add Player", command=add_player).grid(row=17, column=2, columnspan=5, pady=5)
+
+
+       # for i in range(1):
 
             #player name
-            entry = ttk.Entry(parent_frame, width = 20)
-            entry.grid(row=i+2, column = 2, padx = 5, pady = 5, sticky = "w")
+       #     entry = ttk.Entry(parent_frame, width = 20)
+       #     entry.grid(row=i+2, column = 2, padx = 5, pady = 5, sticky = "w")
 
             #user id
-            entry_id = ttk.Entry(parent_frame, width = 20)
-            entry_id.grid(row=i+2, column = 5, padx = 5, pady = (10,0), sticky = "w", columnspan = 2)
+       #     entry_id = ttk.Entry(parent_frame, width = 20)
+       #     entry_id.grid(row=i+2, column = 5, padx = 5, pady = (10,0), sticky = "w", columnspan = 2)
 
-            ttk.Label(parent_frame, text="{}: ".format(i+1)).grid(row=i+2, column = 0, padx = 5, pady = 5, sticky="e")
-
-
-
-        ttk.Button(parent_frame, text="Add Player", command=lambda: self.add_player(parent_frame)).grid(row=17, column=2, columnspan=5, pady=5)
+        #    ttk.Label(parent_frame, text="{}: ".format(i+1)).grid(row=i+2, column = 0, padx = 5, pady = 5, sticky="e")
 
 
-    def add_player(self, parent_frame):
-        player_names = []
-        incomplete_entries = False
 
-        for widget in parent_frame.winfo_children():
-            if isinstance(widget, ttk.Entry):
-                player_name = widget.get().strip() # get player name but remove unnecessary whitespace
-                if player_name:
-                    player_names.append(player_name)
-                    print(widget.get())  # Here you can store the entered player names in your data structure
-                else:
-                    incomplete_entries = True
+    #    ttk.Button(parent_frame, text="Add Player", command=lambda: self.add_player(parent_frame)).grid(row=17, column=2, columnspan=5, pady=5)
 
-        if not player_names and incomplete_entries: # throws error if all filds are empty
-            print("Error: Enter at least one player.")
-        else:
-            print("Player added successfully!")
+
+    #def add_player(self, parent_frame):
+    #    player_names = []
+    #    incomplete_entries = False
+
+   #     for widget in parent_frame.winfo_children():
+    #        if isinstance(widget, ttk.Entry):
+   #             player_name = widget.get().strip() # get player name but remove unnecessary whitespace
+   #             if player_name:
+   #                 player_names.append(player_name)
+   #                 print(widget.get())  # Here you can store the entered player names in your data structure
+   #             else:
+   #                 incomplete_entries = True
+
+   #     if not player_names and incomplete_entries: # throws error if all filds are empty
+    #        print("Error: Enter at least one player.")
+   #     else:
+    #        print("Player added successfully!")
     
     def show(self):
         self.root.mainloop() 
