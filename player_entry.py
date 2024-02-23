@@ -21,7 +21,7 @@ class PlayerEntry:
 
     def create_team_frame(self, team_color, column):
         team_frame = ttk.LabelFrame(self.root, style=f'{team_color}.TLabelframe')
-        team_frame.grid(row=0, column=column, padx=10, pady=10, sticky="nsew")
+        team_frame.grid(row=0, column=column, padx=10, pady=10, sticky="nw")
         ttk.Label(team_frame, text=f"{team_color} Team", font=('Helvetica',15,'bold')).grid(row=0, column=3, sticky="w", padx=5, pady=5, columnspan=2)
         self.create_player_entries(team_frame, team_color)
 
@@ -30,16 +30,18 @@ class PlayerEntry:
         ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2) 
         ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=2, sticky="w", padx=5, pady=(5,0), columnspan=2)
         
-        for i in range(1, 16):  # Assuming 5 players per team
-            ttk.Label(parent_frame, text="{}: ".format(i)).grid(row=i+1, column=0, padx=5, pady=5, sticky="e")
+        for i in range(1):
 
-            # player name
-            entry = ttk.Entry(parent_frame, width=20)
-            entry.grid(row=i+1, column=2, padx=5, pady=5, sticky="w")
-        
-            # user id
-            entry_id = ttk.Entry(parent_frame, width=20)
-            entry_id.grid(row=i+1, column=5, padx=5, pady=(10,0), sticky="w", columnspan=2)
+            #player name
+            entry = ttk.Entry(parent_frame, width = 20)
+            entry.grid(row=i+2, column = 2, padx = 5, pady = 5, sticky = "w")
+
+            #user id
+            entry_id = ttk.Entry(parent_frame, width = 20)
+            entry_id.grid(row=i+2, column = 5, padx = 5, pady = (10,0), sticky = "w", columnspan = 2)
+
+            ttk.Label(parent_frame, text="{}: ".format(i+1)).grid(row=i+2, column = 0, padx = 5, pady = 5, sticky="e")
+
 
 
         ttk.Button(parent_frame, text="Add Player", command=lambda: self.add_player(parent_frame)).grid(row=17, column=2, columnspan=5, pady=5)
