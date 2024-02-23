@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from database import Database
 
 class PlayerEntry:
     def __init__(self):
@@ -16,10 +17,16 @@ class PlayerEntry:
         self.style.configure('Red.TLabelframe', background='#800000')  # Darker red
         self.style.configure('Green.TLabelframe', background='green')
 
-        self.create_team_frame("Red", 0)
-        self.create_team_frame("Green", 1)
+        self.player_counts = {'Red': 1, 'Green': 1}
+        self.player_entries = []
 
-        self.create_buttons()
+        self.db = Database()
+        self.udp = Udp()
+
+        self.create_team_frame("Red", 0)
+        self.create_team_frame("Green", 1)        
+
+        self.create_buttons()        
 
     def create_team_frame(self, team_color, column):
         team_frame = ttk.LabelFrame(self.root, style=f'{team_color}.TLabelframe', borderwidth = 0)
@@ -30,11 +37,7 @@ class PlayerEntry:
     def create_player_entries(self, parent_frame, team):
         ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=2, sticky="w", padx=5, pady=(5,0), columnspan=2)
         ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(5,0), sticky="w", columnspan=2) 
-
-        # Store player entries in a list for easier management
-        self.player_entries = []
-        self.player_counts = {'Red': 1, 'Green': 1}
-
+        
         def add_player():
             print ("Adding player to team: ", team)
 
@@ -48,70 +51,36 @@ class PlayerEntry:
 
             player_number = self.player_counts[team]  # Get the current player count for the team
             ttk.Label(parent_frame, text="{}: ".format(player_number)).grid(row=len(self.player_entries) + 2, column=0, padx=5, pady=5, sticky="e")  
+            print(self.player_counts[team])
             self.player_counts[team] += 1  # Increment the player count for the team
 
-            # Append the new player entry fields to the list
+            print(self.player_counts[team])
+
             self.player_entries.append((entry, entry_id))
 
-        # Initial creation of player entry fields
         add_player()
 
-        # Button to add more players
         ttk.Button(parent_frame, text="Add Player", command=add_player).grid(row=17, column=2, columnspan=5, pady=5)
+
 
     def create_buttons(self):
         # buttons
         buttons = {
-            'F1': 'F1\nEdit Game',
-            'F2': 'F2\nGame Parameters',
-            'F3': 'F3\nStart Game',
-            'F5': 'F5\nPre-Entered Games',
-            'F7': 'F7\n',
-            'F8': 'F8\nView Game',
-            'F10': 'F10\nFlick Sync',
-            'F12': 'F12\nClear Game'
+            'F1': '      F1\nEdit Game',
+            'F2': '             F2\nGame Parameters',
+            'F3': '       F3\nStart Game',
+            'F5': '             F5\nPre-Entered Games',
+            'F7': ' F7\n',
+            'F8': '        F8\nView Game',
+            'F10': '     F10\nFlick Sync',
+            'F12': '      F12\nClear Game'
         }
 
-        button_frame = tk.Frame(self.root, bg = "dark gray")
+        button_frame = tk.Frame(self.root, background = "#7F886E")
         button_frame.grid(row = 10, column = 0, columnspan = 2, sticky = "s", padx = 10, pady = 10)
 
         for idx, (key, value) in enumerate(buttons.items()):
             ttk.Button(button_frame, text = value).grid(row=0, column = idx, padx =5, pady = 5, sticky = "w")
-
-       # for i in range(1):
-
-            #player name
-       #     entry = ttk.Entry(parent_frame, width = 20)
-       #     entry.grid(row=i+2, column = 2, padx = 5, pady = 5, sticky = "w")
-
-            #user id
-       #     entry_id = ttk.Entry(parent_frame, width = 20)
-       #     entry_id.grid(row=i+2, column = 5, padx = 5, pady = (10,0), sticky = "w", columnspan = 2)
-
-        #    ttk.Label(parent_frame, text="{}: ".format(i+1)).grid(row=i+2, column = 0, padx = 5, pady = 5, sticky="e")
-
-
-
-    #    ttk.Button(parent_frame, text="Add Player", command=lambda: self.add_player(parent_frame)).grid(row=17, column=2, columnspan=5, pady=5)
-
-
-    #def add_player(self, parent_frame):
-    #    player_names = []
-    #    incomplete_entries = False
-
-   #     for widget in parent_frame.winfo_children():
-    #        if isinstance(widget, ttk.Entry):
-   #             player_name = widget.get().strip() # get player name but remove unnecessary whitespace
-   #             if player_name:
-   #                 player_names.append(player_name)
-   #                 print(widget.get())  # Here you can store the entered player names in your data structure
-   #             else:
-   #                 incomplete_entries = True
-
-   #     if not player_names and incomplete_entries: # throws error if all filds are empty
-    #        print("Error: Enter at least one player.")
-   #     else:
-    #        print("Player added successfully!")
     
     def show(self):
         self.root.mainloop() 
