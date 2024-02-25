@@ -44,23 +44,28 @@ class PlayerEntry:
         def add_player(team):
             def inner_add_player():
                 player_id = simpledialog.askinteger("ID", "Enter Player ID")
-                player = self.db.get_player(player_id)
-                print(player_id)
 
-                # if player not found ask for name
-                if not player:
-                    player_name = simpledialog.askstring("Name", "Enter Player name")
-                    self.db.add_player(player_id, player_name)
+                # check if player_id is negative
+                if player_id is not None and player_id >= 0:
                     player = self.db.get_player(player_id)
-                user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
-                user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2)
+                    print(player_id)
 
-                player_name_entry = ttk.Label(parent_frame, text=player.get_name(), state='readonly')
-                player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)
-
-                print("Adding player to team: ", team)
-                self.row_counters[team] += 1  # Increment row counter for the team
-
+                    # if player not found ask for name
+                    if not player:
+                        player_name = simpledialog.askstring("Name", "Enter Player name")
+                        self.db.add_player(player_id, player_name)
+                        player = self.db.get_player(player_id)
+                    
+                    user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
+                    user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2)
+                    
+                    player_name_entry = ttk.Label(parent_frame, text=player.get_name(), state='readonly')
+                    player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)            
+                    
+                    print("Adding player to team: ", team)
+                    self.row_counters[team] += 1  # Increment row counter for the team
+                else:
+                    tk.messagebox.showerror("Error", "Player ID cannot be negative")
             return inner_add_player
         
         ttk.Button(parent_frame, text="Add Player", command=add_player(team)).grid(row=17, column=2, columnspan=5, pady=5)
