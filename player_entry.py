@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import simpledialog
 from database import Database
+from player import Player
 
 class PlayerEntry:
     def __init__(self):
@@ -37,29 +38,28 @@ class PlayerEntry:
         self.create_player_entries(team_frame, team_color)
 
     def create_player_entries(self, parent_frame, team):
-        ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=2, sticky="w", padx=5, pady=(5, 0), columnspan=2)
+        ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=3, sticky="w", padx=5, pady=(5, 0), columnspan=2)
         ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(5, 0), sticky="w", columnspan=2)
 
         def add_player(team):
             def inner_add_player():
                 player_id = simpledialog.askinteger("ID", "Enter Player ID")
+                player = self.db.get_player(player_id)
                 print(player_id)
-                if player_id:
-                    user_id_var = tk.StringVar()
-                    user_id_var.set(player_id)
-                    print(user_id_var)
-                    user_id_entry = ttk.Label(parent_frame, text=player_id, state='readonly')
-                    user_id_entry.grid(row=self.row_counters[team], column=2, padx=5, pady=5, columnspan=2)
 
-                    player_name = simpledialog.askstring("Name", "Enter Player Name")
-                    if player_name:
-                        player_name_var = tk.StringVar()
-                        player_name_var.set(player_name)
-                        player_name_entry = ttk.Label(parent_frame, text=player_name, state='readonly')
-                        player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)
+                # if player not found ask for name
+                if not player:
+                    player_name = simpledialog.askstring("Name", "Enter Player name")
+                    self.db.add_player(player_id, player_name)
+                    player = self.db.get_player(player_id)
+                user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
+                user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2)
 
-                        print("Adding player to team: ", team)
-                        self.row_counters[team] += 1  # Increment row counter for the team
+                player_name_entry = ttk.Label(parent_frame, text=player.get_name(), state='readonly')
+                player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)
+
+                print("Adding player to team: ", team)
+                self.row_counters[team] += 1  # Increment row counter for the team
 
             return inner_add_player
         
