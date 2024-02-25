@@ -59,8 +59,9 @@ class Udp:
         self.__receive_socket.sendto(str(equipment_id).encode(), (LOCAL_IP, self.__broadcast_port))
         print(f"Broadcasting equipment id: {equipment_id}......: ")
         
-    def receive_equipment_id(self, equipment_id):
-        while str(equipment_id) != '202':
+    def receive_equipment_id(self): # pass in encr
+        received = ''
+        while str(received) != '202':
             received, address = self.__broadcast_socket.recvfrom(BUFFER_SIZE)
             print(f"Received equipment_id: {received.decode()}")
         
