@@ -55,13 +55,15 @@ class PlayerEntry:
                         player_name = simpledialog.askstring("Name", "Enter Player name")
                         self.db.add_player(player_id, player_name)
                         player = self.db.get_player(player_id)
-                    
+                    equipment_id = simpledialog.askinteger("Equipment ID", "Enter Equipment ID")
+                    player.set_equipment_id(equipment_id)                                       
+
                     user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
                     user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2)
                     
                     player_name_entry = ttk.Label(parent_frame, text=player.get_name(), state='readonly')
-                    player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)            
-                    
+                    player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)                                                                     
+
                     print("Adding player to team: ", team)
                     self.row_counters[team] += 1  # Increment row counter for the team
                 else:
