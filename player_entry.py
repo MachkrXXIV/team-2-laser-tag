@@ -1,8 +1,11 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+import time
 from tkinter import simpledialog
 from database import Database
 from player import Player
+from Udp import Udp
+from threading import Timer
 
 class PlayerEntry:
     def __init__(self):
@@ -25,6 +28,7 @@ class PlayerEntry:
         self.row_counters = {'Red': 2, 'Green': 2}  # Initial row counters for each team
 
         self.db = Database()
+        self.udp = Udp()
 
         self.create_team_frame("Red", 0)
         self.create_team_frame("Green", 1)        
@@ -56,7 +60,14 @@ class PlayerEntry:
                         self.db.add_player(player_id, player_name)
                         player = self.db.get_player(player_id)
                     equipment_id = simpledialog.askinteger("Equipment ID", "Enter Equipment ID")
-                    player.set_equipment_id(equipment_id)                                       
+                    try:
+                        self.udp.broadcast_equipment_id(equipment_id)
+                        self.udp.broadcast_socket.settimeout(10)
+                        player.set_equipment_id(equipment_id)
+                        self.udp.receive_equipment_id()
+                    except:
+                        print("UDP timeout of 10s")
+
 
                     user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
                     user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2)

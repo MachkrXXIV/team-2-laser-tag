@@ -1,5 +1,6 @@
 from splash_screen import Splash
 import socket
+import time
 
 LOCAL_IP = '127.0.0.1'
 BROADCAST_PORT = 7500 #server
@@ -10,8 +11,8 @@ class Udp:
 
     def __init__(self) -> None:
         self.__broadcast_port = BROADCAST_PORT
-        self.__broadcast_socket = broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.__broadcast_socket.bind(BROADCAST_PORT)
+        self.broadcast_socket = broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.broadcast_socket.bind((LOCAL_IP,BROADCAST_PORT))
         self.__receive_port = RECEIVING_PORT
         self.__receive_socket = broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
  
@@ -62,7 +63,7 @@ class Udp:
     def receive_equipment_id(self): # pass in encr
         received = ''
         while str(received) != '202':
-            received, address = self.__broadcast_socket.recvfrom(BUFFER_SIZE)
+            received, address = self.broadcast_socket.recvfrom(BUFFER_SIZE)
             print(f"Received equipment_id: {received.decode()}")
         
 
