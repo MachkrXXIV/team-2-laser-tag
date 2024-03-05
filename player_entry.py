@@ -24,7 +24,7 @@ class PlayerEntry(ttk.Frame):
         self.style.configure('Green.TLabelframe', background='green', bordercolor = ' ')
 
         self.player_counts = {'Red': 1, 'Green': 1}
-        self.player_entries = []
+        self.player_entries = {'Red': {}, 'Green': {}} # Changed to dict 
         self.row_counters = {'Red': 2, 'Green': 2}  # Initial row counters for each team
 
         self.create_team_frame("Red", 0)
@@ -66,22 +66,22 @@ class PlayerEntry(ttk.Frame):
                     except:
                         print("UDP timeout of 10s")
 
-
                     user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
                     user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2)
                     
                     player_name_entry = ttk.Label(parent_frame, text=player.get_name(), state='readonly')
-                    player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)                                                                     
+                    player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)     
+
+                    self.player_entries[team][player_id] = (user_id_entry, player_name_entry)
 
                     print("Adding player to team: ", team)
-                    self.row_counters[team] += 1  # Increment row counter for the team
+                    self.row_counters[team] += 1  
                 else:
                     tk.messagebox.showerror("Error", "Player ID cannot be negative")
             return inner_add_player
         
         ttk.Button(parent_frame, text="Add Player", command=add_player(team)).grid(row=17, column=2, columnspan=5, pady=5)
 
-    
     def create_buttons(self):
         # buttons
         buttons = {
@@ -99,8 +99,23 @@ class PlayerEntry(ttk.Frame):
         button_frame.grid(row = 10, column = 0, columnspan = 2, sticky = "s", padx = 10, pady = 10)
 
         for idx, (key, value) in enumerate(buttons.items()):
+            ttk.Button(button_frame, text=value, command=lambda key=key: self.on_button_press(key)).grid(row=0, column = idx, padx = 5, pady = 5, sticky = "w")        
+    
+    def on_button_press(self,key):
+        if key == 'F12':
+            self.clear_player_entries()
+
+    def clear_player_entries(self):
+        for team, entries in self.player_entries.items():  
+            for player_id, (user_id_entry, player_name_entry) in entries.items():
+                user_id_entry.config(text= '')
+                player_name_entry.config(text= '')
+                print("Player deleted ...")
+                
             ttk.Button(button_frame, text = value).grid(row=0, column = idx, padx =5, pady = 5, sticky = "w")
             
     def on_key_press(self, event: tk.Event):
         if event.keysym == 'F5':
             self.controller.show_frame("Play")
+        elif event.keysym == 'F12':
+            self.cear_player_entreies()
