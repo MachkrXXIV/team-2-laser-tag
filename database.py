@@ -11,13 +11,6 @@ class Database:
         self.__key = SUPABASE_KEY
         self.__table_name = "player"
         self.__supabase: Client = create_client(self.__url,self.__key)
-
-    # def add_player(self, name) -> None:
-    #     players_table = "player"
-    #     data = {"name": name}
-    #     _, count = self.__supabase.table(players_table).insert(data, count=None).execute()
-        
-    #     print(f"Player {name} added successfully!")
     
     def get_player(self, player_id)->Player:
         player = self.__supabase.table(self.__table_name).select("*").eq("player_id", player_id).execute()
