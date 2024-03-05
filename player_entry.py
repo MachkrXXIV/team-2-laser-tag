@@ -6,18 +6,18 @@ from database import Database
 from player import Player
 from Udp import Udp
 from threading import Timer
-
-class PlayerEntry:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Player Entry")
-        self.root.geometry("1000x900")  # Adjusted width
-        self.root.configure(bg = "black") # sets bg to black 
-
-        # Define column weights to make the columns fit the window
-        self.root.columnconfigure(0, weight=5)  # Set higher weight for column 0
-        self.root.columnconfigure(1, weight=5)  # Set higher weight for column 1
-
+# from app import App
+from typing import TYPE_CHECKING
+class PlayerEntry(ttk.Frame):
+    def __init__(self, parent: ttk.Frame, controller, database: Database, udp: Udp):
+        super().__init__(parent)
+        
+        # Inject dependencies
+        self.parent = parent
+        self.controller = controller
+        self.db = database
+        self.udp = udp
+        
         self.style = ttk.Style()
         self.style.theme_use('clam')
         self.style.configure('Red.TLabelframe', background='#800000', bordercolor= ' ')  # Darker red
@@ -27,16 +27,14 @@ class PlayerEntry:
         self.player_entries = {'Red': {}, 'Green': {}} # Changed to dict 
         self.row_counters = {'Red': 2, 'Green': 2}  # Initial row counters for each team
 
-        self.db = Database()
-        self.udp = Udp()
-
         self.create_team_frame("Red", 0)
         self.create_team_frame("Green", 1)        
 
-        self.create_buttons()  
+        self.create_buttons()
+        self.controller.bind('<KeyPress>', self.on_key_press)        
 
     def create_team_frame(self, team_color, column):
-        team_frame = ttk.LabelFrame(self.root, style=f'{team_color}.TLabelframe')
+        team_frame = ttk.LabelFrame(self, style=f'{team_color}.TLabelframe')
         team_frame.grid(row=0, column=column, padx=5, pady=10, sticky="nsew")
         ttk.Label(team_frame, text=f"{team_color} Team", font=('Helvetica',15,'bold')).grid(row=0, column=3, sticky="w", padx=5, pady=5)
         self.create_player_entries(team_frame, team_color)
@@ -97,13 +95,13 @@ class PlayerEntry:
             'F12': '      F12\nClear Game'
         }
 
-        button_frame = tk.Frame(self.root, bg = "#7F886E")
+        button_frame = tk.Frame(self, bg = "#7F886E")
         button_frame.grid(row = 10, column = 0, columnspan = 2, sticky = "s", padx = 10, pady = 10)
 
         for idx, (key, value) in enumerate(buttons.items()):
-            ttk.Button(button_frame, text=value, command=lambda key=key: self.action(key)).grid(row=0, column = idx, padx = 5, pady = 5, sticky = "w")        
+            ttk.Button(button_frame, text=value, command=lambda key=key: self.on_button_press(key)).grid(row=0, column = idx, padx = 5, pady = 5, sticky = "w")        
     
-    def action(self,key):
+    def on_button_press(self,key):
         if key == 'F12':
             self.clear_player_entries()
 
@@ -113,7 +111,11 @@ class PlayerEntry:
                 user_id_entry.config(text= '')
                 player_name_entry.config(text= '')
                 print("Player deleted ...")
-
-
-    def show(self):
-        self.root.mainloop() 
+                
+            ttk.Button(button_frame, text = value).grid(row=0, column = idx, padx =5, pady = 5, sticky = "w")
+            
+    def on_key_press(self, event: tk.Event):
+        if event.keysym == 'F5':
+            self.controller.show_frame("Play")
+        elif event.keysym == 'F12':
+            self.cear_player_entreies()
