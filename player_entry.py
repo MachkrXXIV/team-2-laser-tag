@@ -104,11 +104,7 @@ class PlayerEntry(ttk.Frame):
         button_frame.grid(row = 10, column = 0, columnspan = 2, sticky = "s", padx = 10, pady = 10)
 
         for idx, (key, value) in enumerate(buttons.items()):
-            if key == 'F12':  # For F12 key, bind to clear_player_entries
-                ttk.Button(button_frame, text=value, command=self.clear_player_entries).grid(row=0, column=idx, padx=5, pady=5, sticky="w")
-            else:
-                ttk.Button(button_frame, text=value, command=lambda key=key: self.on_key_press(key)).grid(row=0, column=idx, padx=5, pady=5, sticky="w")
-            #    ttk.Button(button_frame, text=value, command=lambda key=key: self.on_key_press(key)).grid(row=0, column = idx, padx = 5, pady = 5, sticky = "w")        
+            ttk.Button(button_frame, text=value, command=lambda key=key: self.on_button_press(key)).grid(row=0, column=idx, padx=5, pady=5, sticky="w")
     
 
     def clear_player_entries(self):
@@ -121,7 +117,13 @@ class PlayerEntry(ttk.Frame):
                 print("Player deleted ...")
                 
         #  ttk.Button(button_frame, text = value).grid(row=0, column = idx, padx =5, pady = 5, sticky = "w")
-            
+        
+    def on_button_press(self, key):
+        if key == 'F5':
+            self.controller.show_frame("Play")
+        if key == 'F12':
+                self.clear_player_entries()
+    
     def on_key_press(self, event: tk.Event):
         if event.keysym == 'F5':
             self.controller.show_frame("Play")
