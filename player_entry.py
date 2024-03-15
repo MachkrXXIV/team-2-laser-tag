@@ -33,19 +33,24 @@ class PlayerEntry(ttk.Frame):
         self.create_buttons()
         self.controller.bind('<KeyPress>', self.on_key_press)        
 
+
     def create_team_frame(self, team_color, column):
         team_frame = ttk.LabelFrame(self, style=f'{team_color}.TLabelframe')
         team_frame.grid(row=0, column=column, padx=5, pady=10, sticky="nsew")
-        ttk.Label(team_frame, text=f"{team_color} Team", font=('Helvetica',15,'bold')).grid(row=0, column=3, sticky="w", padx=5, pady=5)
+        team_label = ttk.Label(team_frame, text=f"{team_color} Team", font=('Helvetica',15,'bold'))
+        team_label.grid(row=0, column=3, sticky="nsew", padx=5, pady=5, columnspan = 2)
         self.create_player_entries(team_frame, team_color)
 
     def create_player_entries(self, parent_frame, team):
         ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=3, sticky="w", padx=5, pady=(5, 0), columnspan=2)
-        ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(5, 0), sticky="w", columnspan=2)
-
+    #    ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx = 4, pady=(5, 0), columnspan=2)
+        ttk.Label(parent_frame, text="Player Names").grid(row=1, column=6, padx=5, pady=(5, 0), sticky="w", columnspan=2)        
+        
         def add_player(team):
             def inner_add_player():
-                player_id = simpledialog.askinteger("ID", "Enter Player ID")
+                
+                #changed to parent_frame so dialogue boxes will be in front of screen
+                player_id = simpledialog.askinteger(parent = parent_frame, title ="ID", prompt="Enter Player ID")
 
                 # check if player_id is negative
                 if player_id is not None and player_id >= 0:
@@ -54,10 +59,10 @@ class PlayerEntry(ttk.Frame):
 
                     # if player not found ask for name
                     if not player:
-                        player_name = simpledialog.askstring("Name", "Enter Player name")
+                        player_name = simpledialog.askstring(parent = parent_frame, title = "Name", prompt = "Enter Player name")
                         self.db.add_player(player_id, player_name)
                         player = self.db.get_player(player_id)
-                    equipment_id = simpledialog.askinteger("Equipment ID", "Enter Equipment ID")
+                    equipment_id = simpledialog.askinteger(parent = parent_frame, title = "Equipment ID", prompt = "Enter Equipment ID")
                     try:
                         self.udp.broadcast_equipment_id(equipment_id)
                         self.udp.broadcast_socket.settimeout(10)
@@ -67,8 +72,8 @@ class PlayerEntry(ttk.Frame):
                         print("UDP timeout of 10s")
 
                     user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
-                    user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2)
-                    
+                    user_id_entry.grid(row=self.row_counters[team], column=3, padx=5, pady=5, columnspan=2, sticky = "w")
+                   
                     player_name_entry = ttk.Label(parent_frame, text=player.get_name(), state='readonly')
                     player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)     
 
@@ -99,23 +104,26 @@ class PlayerEntry(ttk.Frame):
         button_frame.grid(row = 10, column = 0, columnspan = 2, sticky = "s", padx = 10, pady = 10)
 
         for idx, (key, value) in enumerate(buttons.items()):
-            ttk.Button(button_frame, text=value, command=lambda key=key: self.on_button_press(key)).grid(row=0, column = idx, padx = 5, pady = 5, sticky = "w")        
+            if key == 'F12':  # For F12 key, bind to clear_player_entries
+                ttk.Button(button_frame, text=value, command=self.clear_player_entries).grid(row=0, column=idx, padx=5, pady=5, sticky="w")
+            else:
+                ttk.Button(button_frame, text=value, command=lambda key=key: self.on_key_press(key)).grid(row=0, column=idx, padx=5, pady=5, sticky="w")
+            #    ttk.Button(button_frame, text=value, command=lambda key=key: self.on_key_press(key)).grid(row=0, column = idx, padx = 5, pady = 5, sticky = "w")        
     
-    def on_button_press(self,key):
-        if key == 'F12':
-            self.clear_player_entries()
 
     def clear_player_entries(self):
+        self.row_counters = {'Red': 2, 'Green': 2}
+
         for team, entries in self.player_entries.items():  
             for player_id, (user_id_entry, player_name_entry) in entries.items():
                 user_id_entry.config(text= '')
                 player_name_entry.config(text= '')
                 print("Player deleted ...")
                 
-            ttk.Button(button_frame, text = value).grid(row=0, column = idx, padx =5, pady = 5, sticky = "w")
+        #  ttk.Button(button_frame, text = value).grid(row=0, column = idx, padx =5, pady = 5, sticky = "w")
             
     def on_key_press(self, event: tk.Event):
         if event.keysym == 'F5':
             self.controller.show_frame("Play")
         elif event.keysym == 'F12':
-            self.cear_player_entreies()
+            self.clear_player_entries()
