@@ -26,6 +26,21 @@ class ActionDisplay(ttk.Frame):
         self.display_scoreboard()
         self.create_f5_button()
 
+        #implementation for the countdown timer
+
+        self.timer_label = ttk.Label(self, text="", font=('Helvetica', 30))
+        self.timer_label.grid(row=2, column=0, columnspan=2)
+
+        #It starts the timer
+        self.start_timer()
+
+    def start_timer(self, count=5):
+        if count > 0:
+            self.timer_label.configure(text=str(count))
+            self.parent.after(1000, lambda: self.start_timer(count - 1))
+        else:
+            self.timer_label.configure(text="")
+
     def display_scoreboard(self):
         for team, entries in self.player_entries.items():
             column = self.red_column if team == 'Red' else self.green_column
