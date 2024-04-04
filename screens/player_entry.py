@@ -2,10 +2,10 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import time
 from tkinter import simpledialog
-from database import Database
-from player import Player
-from Udp import Udp
-from action_display import ActionDisplay
+from game.database import Database
+from game.player import Player
+from game.udp import Udp
+from screens.action_display import ActionDisplay
 from threading import Timer
 # from app import App
 from typing import TYPE_CHECKING
