@@ -1,5 +1,5 @@
 from supabase import create_client, Client
-from player import Player
+from game.player import Player
 
 # note this would typically be in a .env file but this is for convenience sake
 SUPABASE_URL="https://tpczavhudvfcgxpsbane.supabase.co"

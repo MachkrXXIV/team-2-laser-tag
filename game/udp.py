@@ -1,4 +1,3 @@
-from splash_screen import Splash
 import socket
 import time
 

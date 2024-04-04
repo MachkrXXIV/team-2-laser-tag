@@ -1,5 +1,4 @@
-from splash_screen import Splash
-from player_entry import PlayerEntry
+from screens.splash_screen import Splash
 from app import App
 
 def main():

@@ -2,15 +2,17 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import time
 from tkinter import simpledialog
-from database import Database
-from player import Player
-from Udp import Udp
-from action_display import ActionDisplay
+from game.database import Database
+from game.player import Player
+from game.udp import Udp
+from screens.action_display import ActionDisplay
 from threading import Timer
 # from app import App
 from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app import App
 class PlayerEntry(ttk.Frame):
-    def __init__(self, parent: ttk.Frame, controller, database: Database, udp: Udp):
+    def __init__(self, parent: ttk.Frame, controller: 'App', database: Database, udp: Udp):
         super().__init__(parent)
         
         # Inject dependencies
@@ -32,7 +34,6 @@ class PlayerEntry(ttk.Frame):
         self.create_team_frame("Green", 1)        
 
         self.create_buttons()
-        self.controller.bind('<KeyPress>', self.on_button_press)   
         self.controller.bind('<KeyPress>', self.on_key_press)          
 
     def create_team_frame(self, team_color, column):
@@ -110,15 +111,17 @@ class PlayerEntry(ttk.Frame):
         player_entry_screen = PlayerEntry(self.parent, self.controller, self.db, self.udp)
         player_entry_screen.grid(row=0, column=0, sticky="nsew")
     
+    # Handles UI button events
     def on_button_press(self, key):
-        if key == 'F5':
+        if key == 'F3':
             action_display = ActionDisplay(self.parent, self.controller, self.player_entries, self.switch_to_player_entry)
             action_display.grid(row=0, column=0, sticky="nsew")
         elif key == 'F12':
             self.clear_player_entries()
-                
+    
+    # Handles keyboard events
     def on_key_press(self, event: tk.Event):
-        if event.keysym == 'F5':
+        if event.keysym == 'F3':
             self.switch_to_player_entry()
         elif event.keysym == 'F12':
             self.clear_player_entries()
