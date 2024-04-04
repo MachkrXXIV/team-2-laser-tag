@@ -4,14 +4,13 @@ from splash_screen import Splash
 from player_entry import PlayerEntry
 from database import Database
 from Udp import Udp
+from action_display import ActionDisplay
 from play import Play
-
 # The window of the game
 class App(tk.Tk):
     def __init__(self, title: str, size: tuple[int,int]):
         # main setup
         super().__init__()
-        # tk.Tk.__init__(self)
         self.title(title)
         self.geometry(f'{size[0]}x{size[1]}')
         self.minsize(size[0],size[1])
@@ -31,11 +30,9 @@ class App(tk.Tk):
         self.frames: dict[str, ttk.Frame] = {} 
     
         # Instantiate frames
-        for F in (PlayerEntry, Play):
-            page_name = F.__name__
-            frame = F(parent=container, controller=self, database=self.db, udp=self.udp)
-            self.frames[page_name] = frame
-            frame.grid(row=0,column=0,sticky="nsew")
+        playerEntry = PlayerEntry(parent=container, controller=self, database=self.db, udp=self.udp)
+        playerEntry.grid(row=0, column=0, sticky="nsew")
+        self.frames["PlayerEntry"] = playerEntry
 
         self.show_frame("PlayerEntry")
         
