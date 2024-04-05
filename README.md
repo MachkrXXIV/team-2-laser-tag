@@ -16,6 +16,9 @@ Group project for the software engineering class of Spring 2024.
 ### Requirements
 
 - Python 3.12+
+- tkinter 8.6
+- pip 19.2+
+- git
 
 ### Setup
 
