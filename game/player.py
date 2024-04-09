@@ -46,4 +46,4 @@ class Player:
 
     # creates readable print
     def __str__(self) -> str:
-        return f'Player ID: {self.id} Equipment ID: {self.equipment_id} Codename: {self.name}'
+        return f'Player ID: {self.id} | Equipment ID: {self.equipment_id} | Codename: {self.name} | Team: {self.team}'

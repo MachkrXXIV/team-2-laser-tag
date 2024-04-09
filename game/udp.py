@@ -46,6 +46,10 @@ class Udp:
         # for _ in range(3):
         #     self.broadcast_data('221', self.__broadcast_port)
 
+    @property
+    def broadcast_socket(self):
+        return self.__broadcast_socket
+
     def broadcast_data(self, data, port):
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)

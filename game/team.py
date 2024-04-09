@@ -19,8 +19,9 @@ class Team:
         return len(self.__players)
         
     def add_player_to_team(self, player: Player):
-        if len(self.__players) >= 15:
+        if self.team_size >= 15:
             raise Exception("Team is already full with 15 players")
+        player.team = self.team_name
         self.__players.append(player)
     
     def remove_player_from_team(self, player: Player):

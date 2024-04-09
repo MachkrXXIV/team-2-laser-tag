@@ -1,5 +1,5 @@
-from team import Team
-from player import Player
+from .team import Team
+from .player import Player
 """
 GameManager follows a singleton pattern
 - import in classes than need game logic by importing game_manager
