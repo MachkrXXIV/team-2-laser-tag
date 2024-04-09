@@ -10,10 +10,10 @@ class Udp:
 
     def __init__(self) -> None:
         self.__broadcast_port = BROADCAST_PORT
-        self.broadcast_socket = broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.broadcast_socket.bind((LOCAL_IP,BROADCAST_PORT))
+        self.__broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__receive_port = RECEIVING_PORT
-        self.__receive_socket = broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.__receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.__receive_socket.bind((LOCAL_IP,RECEIVING_PORT))
  
 
         # Countdown timer finishes, transmit code 202
@@ -46,6 +46,10 @@ class Udp:
         # for _ in range(3):
         #     self.broadcast_data('221', self.__broadcast_port)
 
+    @property
+    def broadcast_socket(self):
+        return self.__broadcast_socket
+
     def broadcast_data(self, data, port):
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -56,13 +60,13 @@ class Udp:
         broadcast_socket.close()
         
     def broadcast_equipment_id(self, equipment_id):
-        self.__receive_socket.sendto(str(equipment_id).encode(), (LOCAL_IP, self.__broadcast_port))
+        self.__broadcast_socket.sendto(str(equipment_id).encode(), (LOCAL_IP, self.__receive_port))
         print(f"Broadcasting equipment id: {equipment_id}......: ")
         
     def receive_equipment_id(self): # pass in encr
         received = ''
         while str(received) != '202':
-            received, address = self.broadcast_socket.recvfrom(BUFFER_SIZE)
+            received, address = self.__receive_socket.recvfrom(BUFFER_SIZE)
             print(f"Received equipment_id: {received.decode()}")
         
 

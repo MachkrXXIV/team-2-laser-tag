@@ -7,10 +7,12 @@ from game.player import Player
 from game.udp import Udp
 from screens.action_display import ActionDisplay
 from threading import Timer
-# from app import App
 from typing import TYPE_CHECKING
+from game.game_manager import game_manager
+
 if TYPE_CHECKING:
     from app import App
+
 class PlayerEntry(ttk.Frame):
     def __init__(self, parent: ttk.Frame, controller: 'App', database: Database, udp: Udp):
         super().__init__(parent)
@@ -26,7 +28,6 @@ class PlayerEntry(ttk.Frame):
         self.style.configure('Red.TLabelframe', background='#800000', bordercolor= ' ')  # Darker red
         self.style.configure('Green.TLabelframe', background='green', bordercolor = ' ')
 
-        self.player_counts = {'Red': 1, 'Green': 1}
         self.player_entries = {'Red': {}, 'Green': {}} # Changed to dict 
         self.row_counters = {'Red': 2, 'Green': 2}  # Initial row counters for each team
 
@@ -36,13 +37,13 @@ class PlayerEntry(ttk.Frame):
         self.create_buttons()
         self.controller.bind('<KeyPress>', self.on_key_press)          
 
-    def create_team_frame(self, team_color, column):
+    def create_team_frame(self, team_color: str, column: int):
         team_frame = ttk.LabelFrame(self, style=f'{team_color}.TLabelframe')
         team_frame.grid(row=0, column=column, padx=5, pady=10, sticky="nsew")
         ttk.Label(team_frame, text=f"{team_color} Team", font=('Helvetica',15,'bold')).grid(row=0, column=3, sticky="w", padx=5, pady=5)
         self.create_player_entries(team_frame, team_color)
 
-    def create_player_entries(self, parent_frame, team):
+    def create_player_entries(self, parent_frame: tk.LabelFrame, team: str):
         ttk.Label(parent_frame, text="User ID".format(team)).grid(row=1, column=3, padx=5, pady=(5, 0), sticky = "w", columnspan=2)
         ttk.Label(parent_frame, text="Player Names").grid(row=1, column=5, padx=5, pady=(5, 0), sticky="w", columnspan=2)
 
@@ -60,14 +61,16 @@ class PlayerEntry(ttk.Frame):
                         player_name = simpledialog.askstring("Name", "Enter Player name")
                         self.db.add_player(player_id, player_name)
                         player = self.db.get_player(player_id)
+                        
                     equipment_id = simpledialog.askinteger("Equipment ID", "Enter Equipment ID")
+                    
                     try:
                         self.udp.broadcast_equipment_id(equipment_id)
-                        self.udp.broadcast_socket.settimeout(10)
-                        player.set_equipment_id(equipment_id)
+                        self.udp.broadcast_socket.settimeout(5)
+                        player.equipment_id = equipment_id
                         self.udp.receive_equipment_id()
                     except:
-                        print("UDP timeout of 10s")
+                        print("UDP timeout of 5s")
 
                     user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
                     user_id_entry.grid(row=self.row_counters[team], column=3, sticky="w", padx=5, pady=5, columnspan=2)
@@ -77,8 +80,9 @@ class PlayerEntry(ttk.Frame):
 
                     self.player_entries[team][player_id] = (user_id_entry, player_name_entry)
 
-                    print("Adding player to team: ", team)
-                    self.row_counters[team] += 1  
+                    print(f"Adding player {player} to team: ", team)
+                    self.row_counters[team] += 1
+                    game_manager.add_player_to_team(player=player, team_name=team)
                 else:
                     tk.messagebox.showerror("Error", "Player ID cannot be negative")
             return inner_add_player
@@ -112,7 +116,7 @@ class PlayerEntry(ttk.Frame):
         player_entry_screen.grid(row=0, column=0, sticky="nsew")
     
     # Handles UI button events
-    def on_button_press(self, key):
+    def on_button_press(self, key: str):
         if key == 'F3':
             action_display = ActionDisplay(self.parent, self.controller, self.player_entries, self.switch_to_player_entry)
             action_display.grid(row=0, column=0, sticky="nsew")
@@ -122,15 +126,18 @@ class PlayerEntry(ttk.Frame):
     # Handles keyboard events
     def on_key_press(self, event: tk.Event):
         if event.keysym == 'F3':
-            self.switch_to_player_entry()
+            action_display = ActionDisplay(self.parent, self.controller, self.player_entries, self.switch_to_player_entry)
+            action_display.grid(row=0, column=0, sticky="nsew")
         elif event.keysym == 'F12':
             self.clear_player_entries()
 
+    # TODO: incorporate new team logic 
     def clear_player_entries(self):
         for team, entries in self.player_entries.items():  
             for player_id, (user_id_entry, player_name_entry) in entries.items():
                 user_id_entry.config(text= '')
                 player_name_entry.config(text= '')
                 print("Player deleted ...")
+            game_manager.clear_team(team)
                 
            # ttk.Button(button_frame, text = value).grid(row=0, column = idx, padx =5, pady = 5, sticky = "w")

@@ -24,7 +24,6 @@ class App(tk.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
         
-        
         self.frames: dict[str, ttk.Frame] = {} 
     
         # Instantiate frames
