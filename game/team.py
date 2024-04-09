@@ -31,3 +31,11 @@ class Team:
     
     def update_points(self):
         self.__points = sum([player.points for player in self.__players])
+        
+    def __str__(self) -> str:
+        return f'''
+        Team Name: {self.team_name}\n
+        Team Size: {self.team_size}\n
+        Total Points: {self.points}
+    '''
+       

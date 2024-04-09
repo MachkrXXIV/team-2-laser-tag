@@ -7,7 +7,6 @@ from game.player import Player
 from game.udp import Udp
 from screens.action_display import ActionDisplay
 from threading import Timer
-# from app import App
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from app import App
@@ -64,7 +63,7 @@ class PlayerEntry(ttk.Frame):
                     try:
                         self.udp.broadcast_equipment_id(equipment_id)
                         self.udp.broadcast_socket.settimeout(10)
-                        player.set_equipment_id(equipment_id)
+                        player.equipment_id = equipment_id
                         self.udp.receive_equipment_id()
                     except:
                         print("UDP timeout of 10s")
