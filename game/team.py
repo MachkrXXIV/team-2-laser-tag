@@ -30,4 +30,4 @@ class Team:
         self.__players = []
     
     def update_points(self):
-        self.__points = sum([player.get_points() for player in self.__players])
+        self.__points = sum([player.points for player in self.__players])
