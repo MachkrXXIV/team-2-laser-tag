@@ -13,9 +13,9 @@ class ActionDisplay(ttk.Frame):
         self.style.theme_use('clam')
         self.style.configure('Red.TFrame', background='#800000')
         self.style.configure('Green.TFrame', background='green')
-        self.style.configure('TeamLabel.TLabel', foreground='black', font=('Helvetica', 15, 'bold'))
-        self.style.configure('PlayerName.TLabel', foreground='#white', font=('Helvetica', 12, 'italic'))
-        self.style.configure('Score.TLabel', foreground='#white', font=('Helvetica', 12, 'bold'))
+        self.style.configure('TeamLabel.TLabel', foreground='black', font=('Helvetica'))
+        self.style.configure('PlayerName.TLabel', foreground='#white', font=('Helvetica'))
+        self.style.configure('Score.TLabel', foreground='#white', font=('Helvetica'))
 
         self.red_column = ttk.Frame(self, style='Red.TFrame')
         self.red_column.grid(row=0, column=0, sticky="nsew")
@@ -51,11 +51,11 @@ class ActionDisplay(ttk.Frame):
             for player_id, (user_id_entry, player_name_entry) in entries.items():
                 player_name_label = ttk.Label(column, text=player_name_entry.cget("text"), style='Scoreboard.TLabel')
                 player_name_label.grid(row=row_num, column=0, sticky="ew", pady=3, padx=10)
-                player_name_label.configure(anchor="center")  # Center align the player name label
+                player_name_label.configure
                 
                 score_label = ttk.Label(column, text="Score: 0", style='Scoreboard.TLabel')
                 score_label.grid(row=row_num, column=1, sticky="ew", pady=3, padx=10)
-                score_label.configure(anchor="center")  # Center align the score label
+                score_label.configure
                 row_num += 1
 
         # Adjust row and column weights to make the columns expandable

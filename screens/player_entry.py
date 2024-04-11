@@ -27,6 +27,8 @@ class PlayerEntry(ttk.Frame):
         self.style.theme_use('clam')
         self.style.configure('Red.TLabelframe', background='#800000', bordercolor= ' ')  # Darker red
         self.style.configure('Green.TLabelframe', background='green', bordercolor = ' ')
+    
+        self.player_counts = {'Red': 1, 'Green': 1}
 
         self.player_entries = {'Red': {}, 'Green': {}} # Changed to dict 
         self.row_counters = {'Red': 2, 'Green': 2}  # Initial row counters for each team
@@ -64,22 +66,21 @@ class PlayerEntry(ttk.Frame):
                         
                     equipment_id = simpledialog.askinteger("Equipment ID", "Enter Equipment ID")
                     
-                    try:
-                        self.udp.broadcast_equipment_id(equipment_id)
-                        self.udp.broadcast_socket.settimeout(5)
-                        player.equipment_id = equipment_id
-                        self.udp.receive_equipment_id()
-                    except:
-                        print("UDP timeout of 5s")
+                    # try:
+                    self.udp.broadcast_equipment_id(equipment_id)
+                    # self.udp.broadcast_socket.settimeout(5)
+                    player.equipment_id = equipment_id
+                    print(player)
+                    self.udp.receive_equipment_id()
 
-                    user_id_entry = ttk.Label(parent_frame, text=player.get_id(), state='readonly')
+                    user_id_entry = ttk.Label(parent_frame, text=player.id, state='readonly')
                     user_id_entry.grid(row=self.row_counters[team], column=3, sticky="w", padx=5, pady=5, columnspan=2)
-                    
-                    player_name_entry = ttk.Label(parent_frame, text=player.get_name(), state='readonly')
+
+                    player_name_entry = ttk.Label(parent_frame, text=player.name, state='readonly')
                     player_name_entry.grid(row=self.row_counters[team], column=5, padx=5, pady=5, columnspan=2)     
 
                     self.player_entries[team][player_id] = (user_id_entry, player_name_entry)
-
+                    
                     print(f"Adding player {player} to team: ", team)
                     self.row_counters[team] += 1
                     game_manager.add_player_to_team(player=player, team_name=team)

@@ -5,6 +5,8 @@ LOCAL_IP = '127.0.0.1'
 BROADCAST_PORT = 7500 #server
 RECEIVING_PORT = 7501 #client
 BUFFER_SIZE = 1024
+RED_BASE = 53
+GREEN_BASE = 43
 
 class Udp:
 
@@ -65,9 +67,11 @@ class Udp:
         
     def receive_equipment_id(self): # pass in encr
         received = ''
-        while str(received) != '202':
+        while True:
             received, address = self.__receive_socket.recvfrom(BUFFER_SIZE)
-            print(f"Received equipment_id: {received.decode()}")
+            if received:
+                print(f"Received equipment_id: {received.decode()}")
+                break
         
 
 
