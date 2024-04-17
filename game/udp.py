@@ -21,19 +21,19 @@ class Udp:
     def broadcast_socket(self):
         return self.__broadcast_socket
         
-    def broadcast_equipment_id(self, equipment_id):
+    def broadcast_equipment_id(self, equipment_id: int) -> None:
         self.__broadcast_socket.sendto(str(equipment_id).encode(), RECEIVING_ADDR)
         print(f"Broadcasting equipment id: {equipment_id}......: ")
     
-    def broadcast_hit_events(self, from_id, to_id):
+    def broadcast_hit_events(self, from_id: int, to_id: int) -> None:
         self.__broadcast_socket.sendto(str(f"{from_id}:{to_id}".encode(), RECEIVING_ADDR))
     
-    def broadcast_end(self):
+    def broadcast_end(self) -> None:
         for i in range(3):
             self.__broadcast_socket.sendto('221'.encode(), RECEIVING_ADDR)
         self.__broadcast_socket.close()
     
-    def receive_equipment_id(self):
+    def receive_equipment_id(self) -> None:
         received = ''
         while True:
             received, _ = self.__receive_socket.recvfrom(BUFFER_SIZE)
@@ -42,7 +42,7 @@ class Udp:
                 print(f"Received equipment_id: {received.decode()}")
                 break
     
-    def receive_game_events(self):
+    def receive_game_events(self) -> None:
         received = ''
         while True:
             received, _ = self.__receive_socket.recvfrom(BUFFER_SIZE)
