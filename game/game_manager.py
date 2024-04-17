@@ -6,6 +6,7 @@ GameManager follows a singleton pattern
 - provide team name to specific which team to modify
 - TODO maybe add timers here?
 - TODO maybe add udp logic here?
+- !!!Kalaya can use this for action display
 """
 class GameManager:
     _instance = None
@@ -30,7 +31,15 @@ class GameManager:
     @property
     def green_team_size(self):
         return self.__green_team.team_size
-        
+    
+    @property
+    def red_team_points(self):
+        return self.__red_team.points
+    
+    @property
+    def green_team_points(self):
+        return self.__green_team.points
+    
     def add_player_to_team(self, player: Player, team_name: str) -> None:
         if team_name == "Red":
             self.__red_team.add_player_to_team(player)
