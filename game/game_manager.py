@@ -25,20 +25,13 @@ class GameManager:
         self.__green_team = Team("Green")
         
     @property
-    def red_team_size(self):
-        return self.__red_team.team_size
+    def red_team(self):
+        return self.__red_team
     
     @property
-    def green_team_size(self):
-        return self.__green_team.team_size
+    def green_team(self):
+        return self.__green_team
     
-    @property
-    def red_team_points(self):
-        return self.__red_team.points
-    
-    @property
-    def green_team_points(self):
-        return self.__green_team.points
     
     def add_player_to_team(self, player: Player, team_name: str) -> None:
         if team_name == "Red":
