@@ -40,4 +40,4 @@ class App(tk.Tk):
         frame.tkraise()
         
         if page_name == 'PlayerEntry':
-            self.udp.receive_equipment_id()
+            self.udp.entry_thread.start()

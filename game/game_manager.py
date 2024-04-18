@@ -1,5 +1,6 @@
 from .team import Team
 from .player import Player
+# from .udp import Udp
 """
 GameManager follows a singleton pattern
 - import in classes than need game logic by importing game_manager
@@ -23,7 +24,13 @@ class GameManager:
         self._initialized = True
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
+        # self.__udp = Udp()
         
+    '''
+    - To add points to specific player, use their equipment ID as keys
+    - ex: player with equipment_id 4 from red_team gets 10 points -> 
+        game_manager.red_team.increment_player_points(4, 10)
+    '''
     @property
     def red_team(self):
         return self.__red_team
@@ -31,8 +38,7 @@ class GameManager:
     @property
     def green_team(self):
         return self.__green_team
-    
-    
+        
     def add_player_to_team(self, player: Player, team_name: str) -> None:
         if team_name == "Red":
             self.__red_team.add_player_to_team(player)
