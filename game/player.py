@@ -38,12 +38,12 @@ class Player:
     def equipment_id(self, equipment_id):
         self.__equipment_id = equipment_id
     
-    def add_points(self, points)->None:
+    def add_points(self, points: int)->None:
         self.__points += points
         
-    def decrease_points(self, points)->None:
+    def decrease_points(self, points: int)->None:
         self.__points -= points
 
     # creates readable print
     def __str__(self) -> str:
-        return f'Player ID: {self.id} | Equipment ID: {self.equipment_id} | Codename: {self.name} | Team: {self.team}'
+        return f'Player ID: {self.id} | Equipment ID: {self.equipment_id} | Codename: {self.name} | Team: {self.team} | Points: {self.points}'
