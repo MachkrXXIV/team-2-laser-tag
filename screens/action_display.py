@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-
+from components.event_window import EventWindow
 class ActionDisplay(ttk.Frame):
     def __init__(self, parent, controller, player_entries, switch_callback, **kwargs):
         super().__init__(parent, **kwargs)
@@ -30,6 +30,8 @@ class ActionDisplay(ttk.Frame):
 
         self.timer_label = ttk.Label(self, text="", font=('Helvetica', 30))
         self.timer_label.grid(row=2, column=0, columnspan=2)
+        self.event_window = EventWindow(self)
+        self.event_window.grid(row=3, columnspan=2, padx=6, pady=6)
 
         #It starts the timer
         self.start_timer()
