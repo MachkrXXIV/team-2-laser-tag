@@ -54,11 +54,11 @@ class Udp:
         self.__broadcast_socket.sendto(str(equipment_id).encode(), RECEIVING_ADDR)
         print(f"Broadcasting equipment id: {equipment_id}......: ")
     
-    def broadcast_hit_event(self, equipment_id: int) -> None:
+    def broadcast_hit_event(self, from_id: int, to_id: int) -> None:
         '''
         Sends equipment_id of player hit
         '''
-        self.__broadcast_socket.sendto(str(equipment_id).encode(), RECEIVING_ADDR)
+        self.__broadcast_socket.sendto(str(f"{from_id}:{to_id}").encode(), RECEIVING_ADDR)
     
     def broadcast_end(self) -> None:
         for i in range(3):
