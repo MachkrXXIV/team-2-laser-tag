@@ -1,7 +1,6 @@
 import socket
 import time
 import threading
-from .game_manager import game_manager
 
 LOCAL_IP = '127.0.0.1'
 BROADCAST_PORT = 7500 #server
@@ -12,13 +11,27 @@ END_CODE = '221'
 BUFFER_SIZE = 1024
 RED_BASE = '53'
 GREEN_BASE = '43'
-
+'''
+UDP class follows the singleton method
+- import the udp instance for screens that require udp functionality
+'''
 class Udp:
+    _instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    
     def __init__(self) -> None:
         '''
         In order to receive UDP transmissions we must start the threads
-        ex: self.udp.entry_thread.start()
+        ex: udp.entry_thread.start()
         '''
+        # Ensure initialization only happens once
+        if hasattr(self, '_initialized'):
+            return
+        self._initialized = True
         self.__broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__receive_socket.bind(RECEIVING_ADDR)
@@ -43,7 +56,7 @@ class Udp:
     
     def broadcast_hit_event(self, equipment_id: int) -> None:
         '''
-        sends equipment_id of player hit
+        Sends equipment_id of player hit
         '''
         self.__broadcast_socket.sendto(str(equipment_id).encode(), RECEIVING_ADDR)
     
@@ -74,4 +87,5 @@ class Udp:
             if ":" in message:
                 from_id, to_id = message.split(":")[0], message.split(":")[1]
                 return from_id, to_id
-            
+        
+udp = Udp()

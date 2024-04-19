@@ -4,24 +4,23 @@ import time
 from tkinter import simpledialog
 from game.database import Database
 from game.player import Player
-from game.udp import Udp
 from screens.action_display import ActionDisplay
 from threading import Timer
 from typing import TYPE_CHECKING
 from game.game_manager import game_manager
+from game.udp import udp
 
 if TYPE_CHECKING:
     from app import App
 
 class PlayerEntry(ttk.Frame):
-    def __init__(self, parent: ttk.Frame, controller: 'App', database: Database, udp: Udp):
+    def __init__(self, parent: ttk.Frame, controller: 'App', database: Database):
         super().__init__(parent)
         
         # Inject dependencies
         self.parent = parent
         self.controller = controller
         self.db = database
-        self.udp = udp
         
         self.style = ttk.Style()
         self.style.theme_use('clam')
@@ -64,7 +63,7 @@ class PlayerEntry(ttk.Frame):
                         
                     equipment_id = simpledialog.askinteger("Equipment ID", "Enter Equipment ID")
                     
-                    self.udp.broadcast_equipment_id(equipment_id)
+                    udp.broadcast_equipment_id(equipment_id)
                     player.equipment_id = equipment_id
 
                     user_id_entry = ttk.Label(parent_frame, text=player.id, state='readonly')
@@ -107,7 +106,7 @@ class PlayerEntry(ttk.Frame):
         # Logic to switch back to the player entry screen
         self.destroy()  # Destroy the action display frame
         # Re-create the player entry screen
-        player_entry_screen = PlayerEntry(self.parent, self.controller, self.db, self.udp)
+        player_entry_screen = PlayerEntry(self.parent, self.controller, self.db)
         player_entry_screen.grid(row=0, column=0, sticky="nsew")
     
     # Handles UI button events
