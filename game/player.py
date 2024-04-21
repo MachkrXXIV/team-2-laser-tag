@@ -45,4 +45,10 @@ class Player:
         self.__points -= points
 
     def __str__(self) -> str:
-        return f"Player ID: {self.id} | Equipment ID: {self.equipment_id} | Codename: {self.name} | Team: {self.team} | Points: {self.points}"
+        return (
+            f"Player ID: {self.id} | "
+            f"Equipment ID: {self.equipment_id} | "
+            f"Codename: {self.name} | "
+            f"Team: {self.team} | "
+            f"Points: {self.points}"
+        )
