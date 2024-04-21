@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, simpledialog
 from game.database import Database
-from game.udp import Udp
 from screens.player_entry import PlayerEntry
+from game.udp import udp
 
 # The window of the game
 class App(tk.Tk):
@@ -16,7 +16,6 @@ class App(tk.Tk):
         
         # instantiate udp and database
         self.db = Database()
-        self.udp = Udp()
         
         # Frame stack
         container = ttk.Frame(self)
@@ -27,7 +26,7 @@ class App(tk.Tk):
         self.frames: dict[str, ttk.Frame] = {} 
     
         # Instantiate frames
-        playerEntry = PlayerEntry(parent=container, controller=self, database=self.db, udp=self.udp)
+        playerEntry = PlayerEntry(parent=container, controller=self, database=self.db)
         playerEntry.grid(row=0, column=0, sticky="nsew")
         self.frames["PlayerEntry"] = playerEntry
 
@@ -38,3 +37,6 @@ class App(tk.Tk):
         print("SWITCHING TO", page_name)
         frame: ttk.Frame = self.frames[page_name]
         frame.tkraise()
+        
+        if page_name == 'PlayerEntry':
+            udp.entry_thread.start()
