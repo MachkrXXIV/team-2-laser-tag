@@ -1,7 +1,16 @@
 import tkinter as tk
+from PIL import Image, ImageTk  # Import the PIL module
 import tkinter.ttk as ttk
+import os
+import winsound
+import time
 
-class ActionDisplay(ttk.Frame):
+from components.event_window import EventWindow
+from components.timer_box import TimerWindow
+from game.udp import udp
+
+
+class ActionDisplay(tk.Frame):
     def __init__(self, parent, controller, player_entries, switch_callback, **kwargs):
         super().__init__(parent, **kwargs)
         self.parent = parent
@@ -23,23 +32,31 @@ class ActionDisplay(ttk.Frame):
         self.green_column = ttk.Frame(self, style='Green.TFrame')
         self.green_column.grid(row=0, column=1, sticky="nsew")
 
+        self.timer = TimerWindow(self)
+        self.timer.grid(row=2, column=0, columnspan=2)
+        self.timer.start_countdown_timer()
+        time.sleep(1)
+        self.timer.start_game_timer()
+
         self.display_scoreboard()
+
         self.create_f5_button()
 
         #implementation for the countdown timer
 
-        self.timer_label = ttk.Label(self, text="", font=('Helvetica', 30))
-        self.timer_label.grid(row=2, column=0, columnspan=2)
+        # self.timer_label = ttk.Label(self, text="", font=("Helvetica", 30))
+        # self.timer_label = tk.Label(self)
+        # self.timer_label.grid(row=2, column=0, columnspan=2)
 
-        #It starts the timer
-        self.start_timer()
+        
+        self.event_window = EventWindow(self)
+        self.event_window.grid(row=3, columnspan=2, padx=6, pady=6)
 
-    def start_timer(self, count=5):
-        if count > 0:
-            self.timer_label.configure(text=str(count))
-            self.parent.after(1000, lambda: self.start_timer(count - 1))
-        else:
-            self.timer_label.configure(text="")
+        # self.start_timer()
+
+        # #Starts the music
+        # self.play_music()
+
 
     def display_scoreboard(self):
         for team, entries in self.player_entries.items():
@@ -65,3 +82,7 @@ class ActionDisplay(ttk.Frame):
     def create_f5_button(self):
         f5_button = ttk.Button(self, text="F5", command=self.switch_callback)
         f5_button.grid(row=1, column=0, columnspan=2, pady=10)
+
+    
+
+    

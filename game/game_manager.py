@@ -1,5 +1,6 @@
 from .team import Team
 from .player import Player
+<<<<<<< Updated upstream
 """
 GameManager follows a singleton pattern
 - import in classes than need game logic by importing game_manager
@@ -7,6 +8,17 @@ GameManager follows a singleton pattern
 - TODO maybe add timers here?
 - TODO maybe add udp logic here?
 """
+=======
+from .udp import Udp
+from queue import PriorityQueue
+import os
+import winsound
+from PIL import Image, ImageTk
+
+TEAM_PLAYERS_MAX = 15
+
+
+>>>>>>> Stashed changes
 class GameManager:
     _instance = None
     
@@ -22,7 +34,32 @@ class GameManager:
         self._initialized = True
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
+<<<<<<< Updated upstream
         
+=======
+        self.__red_leaderboard = PriorityQueue(
+            TEAM_PLAYERS_MAX
+        )  # (score, equipment_id, name)
+        self.__green_leaderboard = PriorityQueue(TEAM_PLAYERS_MAX)
+        
+
+        for player in self.red_team.players.values():
+            self.__red_leaderboard.put(
+                (-player.points, player.equipment_id, player.name)
+            )
+
+        for player in self.green_team.players.values():
+            self.__green_leaderboard.put(
+                (-player.points, player.equipment_id, player.name)
+            )
+
+    """
+    - To add points to specific player, use their equipment ID as keys
+    - ex: player with equipment_id 4 from red_team gets 10 points -> 
+        game_manager.red_team.increment_player_points(4, 10)
+    """
+
+>>>>>>> Stashed changes
     @property
     def red_team_size(self):
         return self.__red_team.team_size
@@ -60,7 +97,57 @@ class GameManager:
         del self.__green_team
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
+<<<<<<< Updated upstream
         
         
 #Import this into to other files that need game logic
 game_manager = GameManager()
+=======
+
+    def adjust_leaderboard(self, team_name: str) -> None:
+        """
+        This function reorganizes the priority queue and should be called whenever
+        a player's points is modified
+        """
+        new_leaderboard = PriorityQueue(TEAM_PLAYERS_MAX)
+        if team_name == "Red":
+            for player in self.red_team.players.values():
+                new_leaderboard.put((-player.points, player.equipment_id, player.name))
+                self.__red_leaderboard = new_leaderboard
+        elif team_name == "Green":
+            for player in self.green_team.players.values():
+                new_leaderboard.put((-player.points, player.equipment_id, player.name))
+                self.__green_leaderboard = new_leaderboard
+        else:
+            raise Exception("[ERROR]: with leaderboard adjustment")
+
+
+    def __str__(self) -> str:
+        """
+        By default the priority queue is a minheap so we need to store with negative values to be maxheap
+        - This function prints the reverted version for debugging purposes
+        """
+        red_leaderboard = "\n".join(
+            str((-score, equipment_id, player_name))
+            for score, equipment_id, player_name in self.__red_leaderboard.queue
+        )
+        green_leaderboard = "\n".join(
+            str((-score, equipment_id, player_name))
+            for score, equipment_id, player_name in self.__green_leaderboard.queue
+        )
+
+        return (
+            "Red Team\n"
+            "---------\n"
+            f"{red_leaderboard}\n"
+            "\n"
+            "Green Team\n"
+            "---------\n"
+            f"{green_leaderboard}\n"
+        )
+    
+
+
+# Import this into to other files that need game logic
+game_manager = GameManager()
+>>>>>>> Stashed changes
