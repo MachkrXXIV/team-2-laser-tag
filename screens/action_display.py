@@ -1,7 +1,9 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from components.event_window import EventWindow
+from game.game_manager import game_manager
 from game.udp import udp
+from game.player import Player
 
 
 class ActionDisplay(ttk.Frame):
@@ -37,7 +39,6 @@ class ActionDisplay(ttk.Frame):
         udp.action_thread.start()
 
         # implementation for the countdown timer
-
         self.timer_label = ttk.Label(self, text="", font=("Helvetica", 30))
         self.timer_label.grid(row=2, column=0, columnspan=2)
         self.event_window = EventWindow(self)
@@ -53,6 +54,7 @@ class ActionDisplay(ttk.Frame):
             self.timer_label.configure(text="")
 
     def display_scoreboard(self):
+        print("displaying")
         for team, entries in self.player_entries.items():
             column = self.red_column if team == "Red" else self.green_column
 
@@ -70,14 +72,25 @@ class ActionDisplay(ttk.Frame):
                 player_name_label.grid(
                     row=row_num, column=0, sticky="ew", pady=3, padx=10
                 )
-                player_name_label.configure
 
+                # Get the player's score from game_manager and update the score label
+                player_score = 0  # Initialize player score
+                if team == "Red":
+                    if player_id in game_manager.red_team.players:
+                        player_score = game_manager.red_team.players[player_id].points
+                else:
+                    if player_id in game_manager.green_team.players:
+                        player_score = game_manager.green_team.players[player_id].points
+                
                 score_label = ttk.Label(
-                    column, text="Score: 0", style="Scoreboard.TLabel"
+                    column, text=f"Score: {player_score}", style="Scoreboard.TLabel"
                 )
                 score_label.grid(row=row_num, column=1, sticky="ew", pady=3, padx=10)
-                score_label.configure
+
                 row_num += 1
+                    
+                # Adjust leaderboard based on the team
+                game_manager.adjust_leaderboard(team_name=team)
 
         # Adjust row and column weights to make the columns expandable
         self.grid_columnconfigure(0, weight=1)
