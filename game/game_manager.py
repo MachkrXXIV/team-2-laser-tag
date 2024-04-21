@@ -35,6 +35,7 @@ class GameManager:
         )  # (score, equipment_id, name)
         self.__green_leaderboard = PriorityQueue(TEAM_PLAYERS_MAX)
 
+        # Adding players to the leaderboard with their scores as priority
         for player in self.red_team.players.values():
             self.__red_leaderboard.put(
                 (-player.points, player.equipment_id, player.name)
