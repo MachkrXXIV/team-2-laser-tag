@@ -63,7 +63,7 @@ class PlayerEntry(ttk.Frame):
                         
                     equipment_id = simpledialog.askinteger("Equipment ID", "Enter Equipment ID")
                     
-                    udp.broadcast_equipment_id(equipment_id)
+                    udp.broadcast_code(equipment_id)
                     player.equipment_id = equipment_id
 
                     user_id_entry = ttk.Label(parent_frame, text=player.id, state='readonly')
