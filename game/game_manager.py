@@ -29,6 +29,7 @@ class GameManager:
         self._initialized = True
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
+
         self.__red_leaderboard = PriorityQueue(
             TEAM_PLAYERS_MAX
         )  # (score, equipment_id, name)
@@ -57,6 +58,14 @@ class GameManager:
     @property
     def green_team(self):
         return self.__green_team
+
+    @property
+    def red_leaderboard(self):
+        return self.__red_leaderboard
+
+    @property
+    def green_leaderboard(self):
+        return self.__green_leaderboard
 
     def add_player_to_team(self, player: Player, team_name: str) -> None:
         if team_name == "Red":
