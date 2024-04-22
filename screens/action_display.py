@@ -56,15 +56,6 @@ class ActionDisplay(tk.Frame):
         self.event_window = EventWindow(self)
         self.event_window.grid(row=3, columnspan=2, padx=6, pady=6)
 
-        self.start_timer()
-
-    def start_timer(self, count=5):
-        if count > 0:
-            self.timer_label.configure(text=str(count))
-            self.parent.after(1000, lambda: self.start_timer(count - 1))
-        else:
-            self.timer_label.configure(text="")
-
     def display_scoreboard(self):
         print("displaying")
 
