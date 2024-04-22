@@ -9,7 +9,7 @@ from game.udp import udp
 import random
 
 TIMER_WINDOW_WIDTH = 200
-TIMER_WINDOW_HEIGHT = 100
+TIMER_WINDOW_HEIGHT = 200
 
 
 class TimerWindow(ttk.Frame):
@@ -35,7 +35,7 @@ class TimerWindow(ttk.Frame):
             for i in range(6)
         ]
         self.music_thread.start()
-        time.sleep(10)
+        time.sleep(8)
         self.start_countdown_timer()
 
     def start_countdown_timer(self, count=5):
@@ -50,7 +50,7 @@ class TimerWindow(ttk.Frame):
             self.timer_label = ttk.Label(self, text="06:30", font=("Helvetica", 24))
             self.timer_label.pack(expand=True)
 
-            self.start_game_timer(390)
+            self.start_game_timer(360)
 
     def start_game_timer(self, total_seconds):
         if total_seconds >= 0:
@@ -59,8 +59,9 @@ class TimerWindow(ttk.Frame):
             time_string = f"{minutes:02d}:{seconds:02d}"
             self.timer_label.config(text=time_string)
             self.after(1000, lambda: self.start_game_timer(total_seconds - 1))
-        # else:
-        #     udp.broadcast_end()
+        else:
+            print("[BROADCASTING] END")
+            udp.broadcast_end()
 
     # def play_music(self):
     #     music_path = os.path.join("Tracks/", "Track08.wav")

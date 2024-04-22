@@ -6,14 +6,24 @@ from game.udp import udp
 from game.player import Player
 import os
 import time
+from components.leaderboard import Leaderboard
 
 from components.event_window import EventWindow
 from components.timer_box import TimerWindow
 from game.udp import udp
 
+RED_BASE = 53
+GREEN_BASE = 43
+UDP_REFRESH_RATE = 500
+GAME_START_TIME = 10_000
+TIMER_WINDOW_WIDTH = 200
+TIMER_WINDOW_HEIGHT = 200
+
 
 class ActionDisplay(ttk.Frame):
-    def __init__(self, parent, controller, player_entries, switch_callback, **kwargs):
+    def __init__(
+        self, parent: ttk.Frame, controller, player_entries, switch_callback, **kwargs
+    ):
         super().__init__(parent, **kwargs)
         self.parent = parent
         self.controller = controller
@@ -29,142 +39,101 @@ class ActionDisplay(ttk.Frame):
         self.style.configure(
             "PlayerName.TLabel", foreground="#white", font=("Helvetica")
         )
+        self.configure(width=1050, height=800)
         self.style.configure("Score.TLabel", foreground="#white", font=("Helvetica"))
-
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        # self.grid(row=0, column=0, sticky="nsew", columnspan=3, rowspan=3)
         self.timer = TimerWindow(self)
         self.timer.grid(row=0, column=0, columnspan=2)
 
-        self.red_column = ttk.Frame(self, style="Red.TFrame")
-        self.red_column.grid(row=1, column=0, sticky="nsew")
+        self.red_column = Leaderboard(self, game_manager.red_team)
+        self.red_column.grid(row=1, column=0, sticky="w", padx=150)
+        self.red_column.configure(style="Red.TFrame")
 
-        self.green_column = ttk.Frame(self, style="Green.TFrame")
-        self.green_column.grid(row=1, column=1, sticky="nsew")
+        self.green_column = Leaderboard(self, game_manager.green_team)
+        self.green_column.grid(row=1, column=1, sticky="e", padx=150)
+        self.green_column.configure(style="Green.TFrame")
 
-        
-
-        self.display_scoreboard()
-        self.create_f5_button()
-        udp.entry_thread.stop()
-        udp.broadcast_code(202)
-        udp.start_thread("action")
-
-        # implementation for the countdown timer
-        self.timer_label = ttk.Label(self, text="", font=("Helvetica", 30))
-        self.timer_label.grid(row=2, column=0, columnspan=2)
         self.event_window = EventWindow(self)
-        self.event_window.grid(row=3, columnspan=2, padx=6, pady=6)
+        self.event_window.grid(row=2, columnspan=3, padx=6, pady=6, sticky="s")
+        self.create_f5_button()
 
-    def display_scoreboard(self):
-        print("displaying")
+        # Check for udp events every second
+        self.after(UDP_REFRESH_RATE, self.process_udp)
 
-        # Variables to track the team with the higher overall score and the corresponding team label
-        red_team_score = sum(
-            player.points for player in game_manager.red_team.players.values()
-        )
-        green_team_score = sum(
-            player.points for player in game_manager.green_team.players.values()
-        )
-        higher_score_team = "Red" if red_team_score > green_team_score else "Green"
-        higher_score_team_label = (
-            self.red_column if higher_score_team == "Red" else self.green_column
-        )
-
-        # Variables to track the highest player score and the corresponding player label
-        highest_score = -1
-        highest_score_label = None
-        
-        # Variables to track total scores for each team
-        red_total_score = sum(player.points for player in game_manager.red_team.players.values())
-        green_total_score = sum(player.points for player in game_manager.green_team.players.values())     
-
-        for team, entries in self.player_entries.items():
-            column = self.red_column if team == "Red" else self.green_column
-
-            # Create a frame for team labels
-            team_label_frame = ttk.Frame(column)
-            team_label_frame.grid(row=0, column=0, sticky="ew", pady=(10, 5))
-
-            team_label = ttk.Label(
-                team_label_frame,
-                text=team + " Team",
-                style="Scoreboard.TLabel",
-                font=("Helvetica", 15, "bold"),
-            )
-            team_label.pack(fill="both")
-
-            if team == higher_score_team:
-                self.flash_label(team_label)
-
-            # Create a frame for player labels
-            player_label_frame = ttk.Frame(column)
-            player_label_frame.grid(row=1, column=0, sticky="nsew")
-
-            row_num = 0
-            row_num = 0
-            for player_id, (user_id_entry, player_name_entry) in entries.items():
-                player_name_label = ttk.Label(
-                    player_label_frame,
-                    text=player_name_entry.cget("text"),
-                    style="Scoreboard.TLabel",
-                )
-                player_name_label.grid(
-                    row=row_num, column=0, sticky="ew", pady=3, padx=10
-                )
-
-                # Get the player's score from game_manager and update the score label
-                player_score = 0  # Initialize player score
-                if team == "Red":
-                    if player_id in game_manager.red_team.players:
-                        player_score = game_manager.red_team.players[player_id].points
-                else:
-                    if player_id in game_manager.green_team.players:
-                        player_score = game_manager.green_team.players[player_id].points
-
-                score_label = ttk.Label(
-                    player_label_frame,
-                    text=f"Score: {player_score}",
-                    style="Scoreboard.TLabel",
-                )
-                score_label.grid(row=row_num, column=1, sticky="ew", pady=3, padx=10)
-                # Check if the current player has the highest score
-                if player_score > highest_score:
-                    highest_score = player_score
-                    highest_score_label = player_name_label
-                # Check if the current player has the highest score
-                if player_score > highest_score:
-                    highest_score = player_score
-                    highest_score_label = player_name_label
-                row_num += 1
-                    
-                # Adjust leaderboard based on the team
-                game_manager.adjust_leaderboard(team_name=team)
-
-        # Adjust row and column weights to make the columns expandable
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-
-        # Flash the label of the highest scoring player
-        self.flash_label(highest_score_label)
-
-        # Place total score labels at the bottom
-        red_total_label = ttk.Label(self.red_column, text=f"Total Score: {red_total_score}", style="Scoreboard.TLabel")
-        red_total_label.grid(row=20, column=0, sticky="ew", pady=(10, 5))
-
-        green_total_label = ttk.Label(self.green_column, text=f"Total Score: {green_total_score}", style="Scoreboard.TLabel")
-        green_total_label.grid(row=20, column=0, sticky="ew", pady=(10, 5))
-    
-        # self.flash_label(highest_score_label)
-        if highest_score_label:
-            self.flash_label(highest_score_label)
-
-    def flash_label(self, label):
-        if label and label.winfo_ismapped():
-            label.grid_remove()
-        elif label:
-            label.grid()
-        self.after(500, lambda: self.flash_label(label))
+        self.after(GAME_START_TIME, lambda: udp.broadcast_code(202))
 
     def create_f5_button(self):
-        f5_button = ttk.Button(self, text="Return to main screen", command=self.switch_callback)
+        f5_button = ttk.Button(
+            self, text="Return to main screen", command=self.switch_callback
+        )
         f5_button.grid(row=0, column=1, sticky="e", padx=10)
         udp.action_thread.stop()
+
+    def process_udp(self):
+        has_started = False
+        if len(udp.event_queue) > 0:
+            from_id, to_id = udp.event_queue.pop()
+
+            red_player = game_manager.red_team.players.get(from_id)
+            red_hit = game_manager.red_team.players.get(to_id)
+            green_player = game_manager.green_team.players.get(from_id)
+            green_hit = game_manager.green_team.players.get(to_id)
+
+            if from_id == 202 and to_id == 202 and not has_started:
+                has_started = True
+                self.event_window.add_log("[START] GAME HAS STARTED")
+
+            if from_id == 221 and to_id == 221:
+                self.event_window.add_log("[END] GAME HAS ENDED")
+                # udp.action_thread.stop()
+
+            # Check for friendly fire
+            if udp.action_thread.is_alive():
+                if red_player and red_hit or green_player and green_hit:
+                    udp.broadcast_code(from_id)
+                else:
+                    udp.broadcast_code(to_id)
+
+            if red_player:
+                if to_id == GREEN_BASE:
+                    red_player.add_points(100)
+                    self.event_window.add_log(
+                        f"Red Team: {red_player.name} hit the base! (+100)"
+                    )
+                    self.red_column.player_frames.get(from_id).show_base()
+                elif red_hit:
+                    red_player.decrease_points(10)
+                    self.event_window.add_log(
+                        f"Red Team: {red_player.name} hit {red_hit.name} (-10)"
+                    )
+                else:
+                    red_player.add_points(10)
+                    self.event_window.add_log(
+                        f"Red Team: {red_player.name} hit {green_hit.name} (+10)"
+                    )
+                game_manager.adjust_leaderboard("Red")
+                self.red_column.sort_leaderboard()
+
+            if green_player:
+                if to_id == RED_BASE:
+                    green_player.add_points(100)
+                    self.event_window.add_log(
+                        f"Green Team: {green_player.name} hit the base! (+100)"
+                    )
+                    self.green_column.player_frames.get(from_id).show_base()
+                elif green_hit:
+                    green_player.decrease_points(10)
+                    self.event_window.add_log(
+                        f"Green Team: {green_player.name} hit {green_hit.name} (-10)"
+                    )
+                else:
+                    green_player.add_points(10)
+                    self.event_window.add_log(
+                        f"Green Team: {green_player.name} hit {red_hit.name} (+10)"
+                    )
+                game_manager.adjust_leaderboard("Green")
+                self.green_column.sort_leaderboard()
+
+        self.after(UDP_REFRESH_RATE, self.process_udp)

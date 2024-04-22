@@ -38,6 +38,3 @@ class App(tk.Tk):
         print("SWITCHING TO", page_name)
         frame: ttk.Frame = self.frames[page_name]
         frame.tkraise()
-
-        if page_name == "PlayerEntry":
-            udp.start_thread("entry")
