@@ -36,7 +36,7 @@ class ActionDisplay(ttk.Frame):
         self.create_f5_button()
         udp.entry_thread.stop()
         udp.broadcast_code(202)
-        udp.action_thread.start()
+        udp.start_thread("action")
 
         # implementation for the countdown timer
         self.timer_label = ttk.Label(self, text="", font=("Helvetica", 30))
@@ -81,14 +81,14 @@ class ActionDisplay(ttk.Frame):
                 else:
                     if player_id in game_manager.green_team.players:
                         player_score = game_manager.green_team.players[player_id].points
-                
+
                 score_label = ttk.Label(
                     column, text=f"Score: {player_score}", style="Scoreboard.TLabel"
                 )
                 score_label.grid(row=row_num, column=1, sticky="ew", pady=3, padx=10)
 
                 row_num += 1
-                    
+
                 # Adjust leaderboard based on the team
                 game_manager.adjust_leaderboard(team_name=team)
 
@@ -99,3 +99,4 @@ class ActionDisplay(ttk.Frame):
     def create_f5_button(self):
         f5_button = ttk.Button(self, text="F5", command=self.switch_callback)
         f5_button.grid(row=1, column=0, columnspan=2, pady=10)
+        udp.action_thread.stop()
