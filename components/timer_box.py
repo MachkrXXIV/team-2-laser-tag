@@ -29,7 +29,7 @@ class TimerWindow(ttk.Frame):
         self.music_thread.start()
         time.sleep(10)
         self.start_countdown_timer()
-        # self.start_game_timer()
+        
         
 
     def start_countdown_timer(self, count=5):
@@ -37,21 +37,15 @@ class TimerWindow(ttk.Frame):
             self.timer_label.config(image=self.digit_images[count])
             self.timer_label.after(2000, lambda: self.start_countdown_timer(count - 1))
         else:
-            print("stops1")
-            # for img in self.digit_images:
-            #     img.tkinter_image = ""
+               
             self.timer_label.config(image="")
-            # del self.timer_label
-            # self.digit_images.clear()
             
-            
-            print("Stops2")
             self.timer_label.destroy()
             self.timer_label = ttk.Label(self, text="06:30", font=("Helvetica", 24))
             self.timer_label.pack(expand=True)
-            print("Stops3")
+            
             self.start_game_timer(390)
-            print("Stops4")
+            
         
 
     def start_game_timer(self, total_seconds):

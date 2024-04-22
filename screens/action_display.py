@@ -50,22 +50,9 @@ class ActionDisplay(tk.Frame):
         udp.entry_thread.stop()
         udp.broadcast_code(202)
         udp.action_thread.start()
-
-        #implementation for the countdown timer
-
-        # self.timer_label = ttk.Label(self, text="", font=("Helvetica", 30))
-        # self.timer_label = tk.Label(self)
-        # self.timer_label.grid(row=2, column=0, columnspan=2)
-
         
         self.event_window = EventWindow(self)
         self.event_window.grid(row=3, columnspan=2, padx=6, pady=6)
-
-        # self.start_timer()
-
-        # #Starts the music
-        # self.play_music()
-
 
     def display_scoreboard(self):
         print("displaying")
