@@ -30,6 +30,7 @@ class GameManager:
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
 
+
         self.__red_leaderboard = PriorityQueue(
             TEAM_PLAYERS_MAX
         )  # (score, equipment_id, name)
@@ -117,7 +118,7 @@ class GameManager:
                 new_leaderboard.put((-player.points, player.equipment_id, player.name))
                 self.__green_leaderboard = new_leaderboard
         else:
-            raise Exception("[ERROR]: with leaderboard adjustment")
+            raise Exception("[ERROR]: with leaderboard adjustment")        
 
     def __str__(self) -> str:
         """
@@ -142,7 +143,7 @@ class GameManager:
             "---------\n"
             f"{green_leaderboard}\n"
         )
-
+    
 
 # Import this into to other files that need game logic
 game_manager = GameManager()

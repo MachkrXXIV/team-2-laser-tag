@@ -2,6 +2,7 @@ import socket
 import time
 import threading
 from typing import List, Tuple
+from typing import List, Tuple
 from .graceful_thread import GracefulThread
 
 LOCAL_IP = "127.0.0.1"
@@ -76,13 +77,34 @@ class Udp:
                 return
             self.__action_thread.start()
 
+    @property
+    def event_queue(self):
+        return self.__event_queue
+
+    def start_thread(self, thread_name: str):
+        """Enter thread_name as 'entry' or 'action' to start the respective thread"""
+        if thread_name == "entry":
+            if self.__entry_thread.is_alive():
+                self.__entry_thread.stop()
+                self.__entry_thread = GracefulThread(target=self._receive_equipment_id)
+                return
+            self.__entry_thread.start()
+        elif thread_name == "action":
+            if self.__action_thread.is_alive():
+                self.__action_thread.stop()
+                self.__entry_thread = GracefulThread(target=self._receive_game_events)
+                return
+            self.__action_thread.start()
+
     def broadcast_code(self, code: int) -> None:
         self.__broadcast_socket.sendto(str(code).encode(), BROADCASTING_ADDR)
 
         if code == START_CODE:
             print(f"[BROADCASTING] Game Start!")
             return
+            return
 
+        print(f"[BROADCASTING] code: {code}......")
         print(f"[BROADCASTING] code: {code}......")
 
     def broadcast_hit_event(self, from_id: int, to_id: int) -> None:
@@ -97,6 +119,11 @@ class Udp:
         for i in range(3):
             self.__broadcast_socket.sendto(END_CODE.encode(), BROADCASTING_ADDR)
         self.__broadcast_socket.close()
+
+    def process_events(self) -> Tuple[int, int]:
+        if self.__event_queue:
+            return self.__event_queue.pop(0)
+        return None
 
     def process_events(self) -> Tuple[int, int]:
         if self.__event_queue:
@@ -124,6 +151,12 @@ class Udp:
 
             if ":" in message:
                 from_id, to_id = message.split(":")[0], message.split(":")[1]
+                if to_id == str(RED_BASE):
+                    print(f"[RECEIVED]: Red Base Hit")
+
+                if to_id == str(RED_BASE):
+                    print(f"[RECEIVED]: Green Base Hit")
+
                 if to_id == str(RED_BASE):
                     print(f"[RECEIVED]: Red Base Hit")
 

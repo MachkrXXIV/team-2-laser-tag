@@ -5,6 +5,7 @@ from components.event_window import EventWindow
 from game.game_manager import game_manager
 from game.udp import udp
 from game.player import Player
+from game.udp import RED_BASE, GREEN_BASE
 
 import os
 import time
@@ -101,6 +102,33 @@ class ActionDisplay(tk.Frame):
         self.grid_columnconfigure(1, weight=1)
 
     def create_f5_button(self):
-        f5_button = ttk.Button(self, text="F5", command=self.switch_callback)
+        f5_button = ttk.Button(self, text="Return to Entry Screen", command=self.switch_callback)
         f5_button.grid(row=0, column=1, sticky="e", padx=10)
         udp.action_thread.stop()
+
+    def base_scores(self, from_id, to_id):
+        if to_id == RED_BASE:
+            scoring_team = "Green"
+        elif to_id == GREEN_BASE:
+            scoring_team = "Red"
+        else:
+            return
+        
+        if from_id in self.player_entries[scoring_team]:
+            player = self.player_entries[scoring_team][from_id]
+            # Pass equipment ID and points to the GameManager
+            if scoring_team == "Red":
+                game_manager.red_team.increment_player_points(player.equipment_id, 100)
+                player_score = game_manager.red_team.players[player.equipment_id].points
+            elif scoring_team == "Green":
+                game_manager.green_team.increment_player_points(player.equipment_id, 100)
+                player_score = game_manager.green_team.players[player.equipment_id].points
+
+            # Update UI
+            player_name_entry = player.player_name_entry
+            player_name_entry.config(text="B" + player_name_entry.cget("text"))
+            score_label = self.red_column if scoring_team == "Red" else self.green_column
+            score_label = score_label.grid_slaves(row=1 + list(self.player_entries[scoring_team].keys()).index(from_id), column=1)[0]
+            score_label.config(text=f"Score: {player_score}")
+
+            print(f"Player {from_id} scored at the {scoring_team.lower()} base!")
