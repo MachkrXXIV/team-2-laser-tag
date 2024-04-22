@@ -59,8 +59,8 @@ class TimerWindow(ttk.Frame):
             time_string = f"{minutes:02d}:{seconds:02d}"
             self.timer_label.config(text=time_string)
             self.after(1000, lambda: self.start_game_timer(total_seconds - 1))
-        else:
-            udp.broadcast_end()
+        # else:
+        #     udp.broadcast_end()
 
     # def play_music(self):
     #     music_path = os.path.join("Tracks/", "Track08.wav")

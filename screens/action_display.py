@@ -4,6 +4,12 @@ from components.event_window import EventWindow
 from game.game_manager import game_manager
 from game.udp import udp
 from game.player import Player
+import os
+import time
+
+from components.event_window import EventWindow
+from components.timer_box import TimerWindow
+from game.udp import udp
 
 
 class ActionDisplay(ttk.Frame):
@@ -25,17 +31,22 @@ class ActionDisplay(ttk.Frame):
         )
         self.style.configure("Score.TLabel", foreground="#white", font=("Helvetica"))
 
+        self.timer = TimerWindow(self)
+        self.timer.grid(row=0, column=0, columnspan=2)
+
         self.red_column = ttk.Frame(self, style="Red.TFrame")
-        self.red_column.grid(row=0, column=0, sticky="nsew")
+        self.red_column.grid(row=1, column=0, sticky="nsew")
 
         self.green_column = ttk.Frame(self, style="Green.TFrame")
-        self.green_column.grid(row=0, column=1, sticky="nsew")
+        self.green_column.grid(row=1, column=1, sticky="nsew")
+
+        
 
         self.display_scoreboard()
         self.create_f5_button()
         udp.entry_thread.stop()
         udp.broadcast_code(202)
-        udp.action_thread.start()
+        udp.start_thread("action")
 
         # implementation for the countdown timer
         self.timer_label = ttk.Label(self, text="", font=("Helvetica", 30))
