@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from PIL import Image, ImageTk
 import os
-import winsound
+import pygame
 from game.graceful_thread import GracefulThread
 import time
 import asyncio
@@ -17,6 +17,7 @@ class TimerWindow(ttk.Frame):
         self.parent = parent
         self.timer_label = ttk.Label(self, text="00:00", font=("Helvetica", 24))
         self.timer_label.pack(expand=True)
+        pygame.mixer.init()
 
         self.music_thread = GracefulThread(target=self.play_music)
 
@@ -60,4 +61,5 @@ class TimerWindow(ttk.Frame):
 
     def play_music(self):
         music_path = os.path.join("Tracks/", "Track08.wav")
-        winsound.PlaySound(music_path, winsound.SND_FILENAME)
+        pygame.mixer.music.load(music_path)
+        pygame.mixer.music.play()

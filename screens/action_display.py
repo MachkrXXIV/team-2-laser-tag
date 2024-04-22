@@ -7,7 +7,6 @@ from game.udp import udp
 from game.player import Player
 
 import os
-import winsound
 import time
 
 from components.event_window import EventWindow
