@@ -43,6 +43,7 @@ class Udp:
         self.__entry_thread = GracefulThread(target=self._receive_equipment_id)
         self.__action_thread = GracefulThread(target=self._receive_game_events)
         self.__event_queue: List[Tuple[int, int]] = []
+        self.__event_queue: List[Tuple[int, int]] = []
 
     @property
     def broadcast_socket(self):
