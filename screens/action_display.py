@@ -1,20 +1,12 @@
 import tkinter as tk
-from PIL import Image, ImageTk  # Import the PIL module
 import tkinter.ttk as ttk
 from components.event_window import EventWindow
 from game.game_manager import game_manager
 from game.udp import udp
 from game.player import Player
 
-import os
-import time
 
-from components.event_window import EventWindow
-from components.timer_box import TimerWindow
-from game.udp import udp
-
-
-class ActionDisplay(tk.Frame):
+class ActionDisplay(ttk.Frame):
     def __init__(self, parent, controller, player_entries, switch_callback, **kwargs):
         super().__init__(parent, **kwargs)
         self.parent = parent
@@ -34,25 +26,20 @@ class ActionDisplay(tk.Frame):
         self.style.configure("Score.TLabel", foreground="#white", font=("Helvetica"))
 
         self.red_column = ttk.Frame(self, style="Red.TFrame")
-        self.red_column.grid(row=1, column=0, sticky="nsew")
+        self.red_column.grid(row=0, column=0, sticky="nsew")
 
         self.green_column = ttk.Frame(self, style="Green.TFrame")
-        self.green_column.grid(row=1, column=1, sticky="nsew")
-
-        self.timer = TimerWindow(self)
-        self.timer.grid(row=0, column=0, columnspan=2)
+        self.green_column.grid(row=0, column=1, sticky="nsew")
 
         self.display_scoreboard()
-
         self.create_f5_button()
         udp.entry_thread.stop()
         udp.broadcast_code(202)
-        udp.start_thread("action")
+        udp.action_thread.start()
 
         # implementation for the countdown timer
         self.timer_label = ttk.Label(self, text="", font=("Helvetica", 30))
         self.timer_label.grid(row=2, column=0, columnspan=2)
-
         self.event_window = EventWindow(self)
         self.event_window.grid(row=3, columnspan=2, padx=6, pady=6)
 
@@ -64,7 +51,7 @@ class ActionDisplay(tk.Frame):
             self.parent.after(1000, lambda: self.start_timer(count - 1))
         else:
             self.timer_label.configure(text="")
-
+    
     def display_scoreboard(self):
         print("displaying")
         
@@ -77,6 +64,14 @@ class ActionDisplay(tk.Frame):
         # Variables to track the highest player score and the corresponding player label
         highest_score = -1
         highest_score_label = None
+        
+        # Variables to track total scores for each team
+        red_total_score = sum(player.points for player in game_manager.red_team.players.values())
+        green_total_score = sum(player.points for player in game_manager.green_team.players.values())
+
+        # Variables to track total scores for each team
+        red_total_score = sum(player.points for player in game_manager.red_team.players.values())
+        green_total_score = sum(player.points for player in game_manager.green_team.players.values())
         
         for team, entries in self.player_entries.items():
             column = self.red_column if team == "Red" else self.green_column
@@ -129,7 +124,7 @@ class ActionDisplay(tk.Frame):
                     highest_score = player_score
                     highest_score_label = player_name_label
                 row_num += 1
-
+                    
                 # Adjust leaderboard based on the team
                 game_manager.adjust_leaderboard(team_name=team)
 
@@ -139,6 +134,13 @@ class ActionDisplay(tk.Frame):
 
         # Flash the label of the highest scoring player
         self.flash_label(highest_score_label)
+
+        # Place total score labels at the bottom
+        red_total_label = ttk.Label(self.red_column, text=f"Total Score: {red_total_score}", style="Scoreboard.TLabel")
+        red_total_label.grid(row=20, column=0, sticky="ew", pady=(10, 5))
+
+        green_total_label = ttk.Label(self.green_column, text=f"Total Score: {green_total_score}", style="Scoreboard.TLabel")
+        green_total_label.grid(row=20, column=0, sticky="ew", pady=(10, 5))
     
     def flash_label(self, label):
         if label.winfo_ismapped():
@@ -149,5 +151,4 @@ class ActionDisplay(tk.Frame):
 
     def create_f5_button(self):
         f5_button = ttk.Button(self, text="F5", command=self.switch_callback)
-        f5_button.grid(row=0, column=1, sticky="e", padx=10)
-        udp.action_thread.stop()
+        f5_button.grid(row=1, column=0, columnspan=2, pady=10)
