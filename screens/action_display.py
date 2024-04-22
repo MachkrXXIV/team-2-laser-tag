@@ -102,7 +102,6 @@ class ActionDisplay(tk.Frame):
             for player_id, (user_id_entry, player_name_entry) in entries.items():
                 player_name_label = ttk.Label(
                     player_label_frame,
-                    player_label_frame,
                     text=player_name_entry.cget("text"),
                     style="Scoreboard.TLabel",
                 )
@@ -143,16 +142,18 @@ class ActionDisplay(tk.Frame):
         self.grid_columnconfigure(1, weight=1)
 
         # Flash the label of the highest scoring player
-        self.flash_label(highest_score_label)
+        # self.flash_label(highest_score_label)
+        if highest_score_label:
+            self.flash_label(highest_score_label)
 
     def flash_label(self, label):
-        if label.winfo_ismapped():
+        if label and label.winfo_ismapped():
             label.grid_remove()
-        else:
+        elif label:
             label.grid()
         self.after(500, lambda: self.flash_label(label))
 
     def create_f5_button(self):
-        f5_button = ttk.Button(self, text="F5", command=self.switch_callback)
+        f5_button = ttk.Button(self, text="Return to main screen", command=self.switch_callback)
         f5_button.grid(row=0, column=1, sticky="e", padx=10)
         udp.action_thread.stop()
