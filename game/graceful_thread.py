@@ -12,6 +12,7 @@ class GracefulThread(threading.Thread):
         self._stop_event = threading.Event()
 
     def stop(self):
+        print("Thread stopping")
         self._stop_event.set()
 
     def stopped(self):
