@@ -27,8 +27,8 @@ class TimerWindow(ttk.Frame):
         self.configure(style="TimerWindow.TFrame")
         self.digit_images = [ImageTk.PhotoImage(Image.open(os.path.join("images", f"{i}.tif"))) for i in range(6)]
         self.music_thread.start()
-        # time.sleep(10)
-        # self.start_countdown_timer()
+        time.sleep(10)
+        self.start_countdown_timer()
         # self.start_game_timer()
         
 
@@ -38,29 +38,29 @@ class TimerWindow(ttk.Frame):
             self.timer_label.after(2000, lambda: self.start_countdown_timer(count - 1))
         else:
             print("stops1")
-            for img in self.digit_images:
-                img.tkinter_image = ""
+            # for img in self.digit_images:
+            #     img.tkinter_image = ""
             self.timer_label.config(image="")
-            del self.timer_label
-            self.digit_images.clear()
-            self.timer_label = ttk.Label(self, text="00:00", font=("Helvetica", 24))
-            self.timer_label.pack(expand=True)
+            # del self.timer_label
+            # self.digit_images.clear()
             
-
+            
             print("Stops2")
-            self.start_game_timer()
+            self.timer_label.destroy()
+            self.timer_label = ttk.Label(self, text="06:30", font=("Helvetica", 24))
+            self.timer_label.pack(expand=True)
             print("Stops3")
-        self.timer_label.destroy()
+            self.start_game_timer(390)
+            print("Stops4")
+        
 
-    def start_game_timer(self):
-        total_seconds = 390  # 6 minutes and 30 seconds
-        while total_seconds >= 0:
+    def start_game_timer(self, total_seconds):
+        if total_seconds >= 0:
             minutes = total_seconds // 60
             seconds = total_seconds % 60
             time_string = f"{minutes:02d}:{seconds:02d}"
             self.timer_label.config(text=time_string)
-            time.sleep(1)  # Wait for 1 second
-            total_seconds -= 1
+            self.after(1000, lambda: self.start_game_timer(total_seconds - 1))
 
 
     def play_music(self):

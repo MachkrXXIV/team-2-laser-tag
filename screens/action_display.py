@@ -36,16 +36,13 @@ class ActionDisplay(tk.Frame):
         self.style.configure("Score.TLabel", foreground="#white", font=("Helvetica"))
 
         self.red_column = ttk.Frame(self, style="Red.TFrame")
-        self.red_column.grid(row=0, column=0, sticky="nsew")
+        self.red_column.grid(row=1, column=0, sticky="nsew")
 
         self.green_column = ttk.Frame(self, style="Green.TFrame")
-        self.green_column.grid(row=0, column=1, sticky="nsew")
+        self.green_column.grid(row=1, column=1, sticky="nsew")
 
         self.timer = TimerWindow(self)
-        self.timer.grid(row=2, column=0, columnspan=2)
-        self.timer.start_countdown_timer()
-        time.sleep(1)
-        self.timer.start_game_timer()
+        self.timer.grid(row=0, column=0, columnspan=2)
 
         self.display_scoreboard()
 
@@ -115,7 +112,8 @@ class ActionDisplay(tk.Frame):
 
     def create_f5_button(self):
         f5_button = ttk.Button(self, text="F5", command=self.switch_callback)
-        f5_button.grid(row=1, column=0, columnspan=2, pady=10)
+        # f5_button.grid(row=1, column=0, columnspan=2, pady=10)
+        f5_button.grid(row=0, column=1, sticky="e", padx=10)
 
     
 
