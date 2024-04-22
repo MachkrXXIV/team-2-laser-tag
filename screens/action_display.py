@@ -56,6 +56,15 @@ class ActionDisplay(tk.Frame):
         self.event_window = EventWindow(self)
         self.event_window.grid(row=3, columnspan=2, padx=6, pady=6)
 
+        self.start_timer()
+
+    def start_timer(self, count=5):
+        if count > 0:
+            self.timer_label.configure(text=str(count))
+            self.parent.after(1000, lambda: self.start_timer(count - 1))
+        else:
+            self.timer_label.configure(text="")
+
     def display_scoreboard(self):
         print("displaying")
 
@@ -98,8 +107,10 @@ class ActionDisplay(tk.Frame):
             player_label_frame.grid(row=1, column=0, sticky="nsew")
 
             row_num = 0
+            row_num = 0
             for player_id, (user_id_entry, player_name_entry) in entries.items():
                 player_name_label = ttk.Label(
+                    player_label_frame,
                     player_label_frame,
                     text=player_name_entry.cget("text"),
                     style="Scoreboard.TLabel",
@@ -123,6 +134,10 @@ class ActionDisplay(tk.Frame):
                     style="Scoreboard.TLabel",
                 )
                 score_label.grid(row=row_num, column=1, sticky="ew", pady=3, padx=10)
+                # Check if the current player has the highest score
+                if player_score > highest_score:
+                    highest_score = player_score
+                    highest_score_label = player_name_label
                 # Check if the current player has the highest score
                 if player_score > highest_score:
                     highest_score = player_score
