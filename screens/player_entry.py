@@ -18,6 +18,8 @@ class PlayerEntry(ttk.Frame):
     def __init__(self, parent: ttk.Frame, controller: "App", database: Database):
         super().__init__(parent)
 
+        self.configure(height = 800, width = 800)
+
         # Inject dependencies
         self.parent = parent
         self.controller = controller
@@ -42,9 +44,11 @@ class PlayerEntry(ttk.Frame):
     def create_team_frame(self, team_color: str, column: int):
         team_frame = ttk.LabelFrame(self, style=f"{team_color}.TLabelframe")
         team_frame.grid(row=0, column=column, padx=5, pady=10, sticky="nsew")
+
         ttk.Label(
-            team_frame, text=f"{team_color} Team", font=("Helvetica", 15, "bold")
+        team_frame, text=f"{team_color} Team", font=("Helvetica", 15, "bold")
         ).grid(row=0, column=3, sticky="w", padx=5, pady=5)
+        
         self.create_player_entries(team_frame, team_color)
 
     def create_player_entries(self, parent_frame: tk.LabelFrame, team: str):
@@ -137,8 +141,7 @@ class PlayerEntry(ttk.Frame):
 
         for idx, (key, value) in enumerate(buttons.items()):
             ttk.Button(
-                button_frame, text=value, command=lambda k=key: self.on_button_press(k)
-            ).grid(row=0, column=idx, padx=5, pady=5, sticky="w")
+                button_frame, text=value, command=lambda k=key: self.on_button_press(k)).grid(row=0, column=idx, padx=5, pady=5, sticky="w")
 
     def switch_to_player_entry(self):
         # Logic to switch back to the player entry screen

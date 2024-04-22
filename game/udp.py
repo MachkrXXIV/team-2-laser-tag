@@ -42,6 +42,7 @@ class Udp:
         self.__entry_thread = GracefulThread(target=self._receive_equipment_id)
         self.__action_thread = GracefulThread(target=self._receive_game_events)
 
+
     @property
     def broadcast_socket(self):
         return self.__broadcast_socket
@@ -98,6 +99,5 @@ class Udp:
                 from_id, to_id = message.split(":")[0], message.split(":")[1]
                 print(f"[RECEIVED]: player: {from_id} hit player: {to_id}")
                 return from_id, to_id
-
 
 udp = Udp()

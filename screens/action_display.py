@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from components.event_window import EventWindow
 from game.udp import udp
+from game.udp import RED_BASE, GREEN_BASE
 
 
 class ActionDisplay(ttk.Frame):
@@ -84,5 +85,29 @@ class ActionDisplay(ttk.Frame):
         self.grid_columnconfigure(1, weight=1)
 
     def create_f5_button(self):
-        f5_button = ttk.Button(self, text="F5", command=self.switch_callback)
+        f5_button = ttk.Button(self, text="Return to Entry Screen", command=self.switch_callback)
         f5_button.grid(row=1, column=0, columnspan=2, pady=10)
+
+def base_scores(self, from_id, to_id):
+    if to_id == RED_BASE:
+        scoring_team = "Green"
+    elif to_id == GREEN_BASE:
+        scoring_team = "Red"
+    else:
+        return
+    
+    if from_id in self.player_entries[scoring_team]:
+        # Add 100 points to the player's score
+        self.player_entries[scoring_team][from_id].score += 100
+        # Add a "B" to the left of the player's codename
+        player_name_entry = self.player_entries[scoring_team][from_id].player_name_entry
+        player_name_entry.config(text="B" + player_name_entry.cget("text"))
+
+        # Update the score label in the UI
+        score_label = self.red_column if scoring_team == "Red" else self.green_column
+        score_label = score_label.grid_slaves(row=1 + list(self.player_entries[scoring_team].keys()).index(from_id), column=1)[0]
+        score_label.config(text=f"Score: {self.player_entries[scoring_team][from_id].score}")
+
+        print(f"Player {from_id} scored at the {scoring_team.lower()} base!")
+    else:
+        print(f"Player {from_id} is not on the {scoring_team.lower()} team.")
