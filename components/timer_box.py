@@ -6,6 +6,7 @@ import pygame
 from game.graceful_thread import GracefulThread
 import time
 import asyncio
+import random
 
 TIMER_WINDOW_WIDTH = 200
 TIMER_WINDOW_HEIGHT = 100
@@ -59,7 +60,16 @@ class TimerWindow(ttk.Frame):
             self.timer_label.config(text=time_string)
             self.after(1000, lambda: self.start_game_timer(total_seconds - 1))
 
+    # def play_music(self):
+    #     music_path = os.path.join("Tracks/", "Track08.wav")
+    #     pygame.mixer.music.load(music_path)
+    #     pygame.mixer.music.play()
+
     def play_music(self):
-        music_path = os.path.join("Tracks/", "Track08.wav")
+        tracks_dir = "Tracks/"
+        tracks = os.listdir(tracks_dir)
+        track_file = random.choice(tracks)
+        print("Playing track:", track_file)  # Print the name of the track being played
+        music_path = os.path.join(tracks_dir, track_file)
         pygame.mixer.music.load(music_path)
         pygame.mixer.music.play()
