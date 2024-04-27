@@ -15,7 +15,7 @@ from game.udp import udp
 RED_BASE = 53
 GREEN_BASE = 43
 UDP_REFRESH_RATE = 500
-GAME_START_TIME = 10_000
+GAME_START_TIME = 22_000
 TIMER_WINDOW_WIDTH = 200
 TIMER_WINDOW_HEIGHT = 200
 
@@ -61,8 +61,6 @@ class ActionDisplay(ttk.Frame):
 
         # Check for udp events every second
         self.after(UDP_REFRESH_RATE, self.process_udp)
-
-        self.after(GAME_START_TIME, lambda: udp.broadcast_code(202))
 
     def create_f5_button(self):
         f5_button = ttk.Button(

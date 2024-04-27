@@ -30,13 +30,13 @@ class GameManager:
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
 
-        # for i in range(5):  # For Testing purposes
-        #     red_player = Player(i, f"red{i}")
-        #     red_player.equipment_id = i
-        #     green_player = Player(i + 6, f"green{i+6}")
-        #     green_player.equipment_id = i + 6
-        #     self.__red_team.add_player_to_team(red_player)
-        #     self.__green_team.add_player_to_team(green_player)
+        for i in range(5):  # For Testing purposes
+            red_player = Player(i, f"red{i}")
+            red_player.equipment_id = i
+            green_player = Player(i + 6, f"green{i+6}")
+            green_player.equipment_id = i + 6
+            self.__red_team.add_player_to_team(red_player)
+            self.__green_team.add_player_to_team(green_player)
 
         self.__red_leaderboard = PriorityQueue(
             TEAM_PLAYERS_MAX

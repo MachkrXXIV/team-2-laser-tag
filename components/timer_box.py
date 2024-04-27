@@ -11,6 +11,7 @@ import random
 TIMER_WINDOW_WIDTH = 200
 TIMER_WINDOW_HEIGHT = 200
 NUM_IMAGES = 31
+DELAY = 8
 
 
 class TimerWindow(ttk.Frame):
@@ -35,13 +36,11 @@ class TimerWindow(ttk.Frame):
             ImageTk.PhotoImage(Image.open(os.path.join("images", f"{i}.tif")))
             for i in range(NUM_IMAGES)
         ]
-        # self.music_thread.start()
-        # time.sleep(8)
         self.start_countdown_timer()
 
-    def start_countdown_timer(self, count=5):
+    def start_countdown_timer(self, count=30):
         if count >= 0:
-            if count == 15 and not self.music_thread.is_alive():
+            if count == DELAY and not self.music_thread.is_alive():
                 self.music_thread.start()
             self.timer_label.config(image=self.digit_images[count])
             self.timer_label.after(2000, lambda: self.start_countdown_timer(count - 1))
@@ -54,6 +53,7 @@ class TimerWindow(ttk.Frame):
             self.timer_label.pack(expand=True)
 
             self.start_game_timer(360)
+            udp.broadcast_code(202)
 
     def start_game_timer(self, total_seconds):
         if total_seconds >= 0:
