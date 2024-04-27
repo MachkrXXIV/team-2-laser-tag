@@ -30,7 +30,7 @@ class GameManager:
         self.__red_team = Team("Red")
         self.__green_team = Team("Green")
 
-        # for i in range(15):  # For Testing purposes
+        # for i in range(5):  # For Testing purposes
         #     red_player = Player(i, f"red{i}")
         #     red_player.equipment_id = i
         #     green_player = Player(i + 6, f"green{i+6}")

@@ -103,6 +103,9 @@ class Leaderboard(ttk.Frame):
             elif str(current_color) == "orange":
                 label.configure(foreground="black")
 
+        if self.is_winning_team is False:
+            label.configure(foreground="black")
+
         self.after(1000, lambda: self.flash_label(label))
         self.is_winning_team = False
 
@@ -114,12 +117,6 @@ class Leaderboard(ttk.Frame):
         )
         for frame in self.winfo_children():
             if isinstance(frame, PlayerFrame):
-                # if 1st iteration
-                if frame == self.winfo_children()[2]:
-                    frame.is_top_score = True
-                    frame.player_name_label
-                    frame.after(500, lambda: self.flash_label(frame.player_name_label))
-                    frame.is_top_score = False
                 (points, equipment_id, name) = team_leaderboard.get()
                 frame.update_score(name, -points)
         game_manager.red_team.sum_points()
