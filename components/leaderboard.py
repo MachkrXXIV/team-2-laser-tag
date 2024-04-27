@@ -62,7 +62,7 @@ class Leaderboard(ttk.Frame):
         self.team = team
         self.configure(style=f"{team.team_name}.TFrame")
         self.configure(width=400, height=800, border=1, relief="solid")
-        # self.configure(padding=10)
+        self.configure(padding=10)
         self.player_frames: Dict[int, PlayerFrame] = {}
         self.highest_score_label = None
         self.is_winning_team = False

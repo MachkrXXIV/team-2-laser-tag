@@ -20,7 +20,7 @@ class App(tk.Tk):
 
         # Frame stack
         container = ttk.Frame(self)
-        container.pack(side="top", fill="y")
+        container.pack(side="top", fill="y", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 

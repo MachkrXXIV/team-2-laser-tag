@@ -43,20 +43,20 @@ class ActionDisplay(ttk.Frame):
         self.style.configure("Score.TLabel", foreground="#white", font=("Helvetica"))
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        # self.grid(row=0, column=0, sticky="nsew", columnspan=3, rowspan=3)
+        self.grid(row=0, column=0, sticky="nsew", columnspan=3, rowspan=3)
         self.timer = TimerWindow(self)
-        self.timer.grid(row=0, column=0, columnspan=2)
+        self.timer.grid(row=0, column=0, columnspan=2, pady=10, sticky="n")
 
         self.red_column = Leaderboard(self, game_manager.red_team)
-        self.red_column.grid(row=1, column=0, sticky="w", padx=150)
+        self.red_column.grid(row=0, column=0, sticky="nw", padx=150, pady=10)
         self.red_column.configure(style="Red.TFrame")
 
         self.green_column = Leaderboard(self, game_manager.green_team)
-        self.green_column.grid(row=1, column=1, sticky="e", padx=150)
+        self.green_column.grid(row=0, column=1, sticky="ne", padx=150, pady=10)
         self.green_column.configure(style="Green.TFrame")
 
         self.event_window = EventWindow(self)
-        self.event_window.grid(row=2, columnspan=3, padx=6, pady=6, sticky="s")
+        self.event_window.grid(row=1, columnspan=3, padx=6, pady=6)
         self.create_f5_button()
 
         # Check for udp events every second
@@ -66,7 +66,10 @@ class ActionDisplay(ttk.Frame):
         f5_button = ttk.Button(
             self, text="Return to main screen", command=self.switch_callback
         )
-        f5_button.grid(row=0, column=1, sticky="e", padx=10)
+        # f5_button.grid(row=0, column=1, sticky="nsew", padx=10)
+        f5_button.place(
+            x=self.winfo_width() // 2 + 450, y=self.winfo_height() // 2 + 150
+        )
         udp.action_thread.stop()
 
     def process_udp(self):
