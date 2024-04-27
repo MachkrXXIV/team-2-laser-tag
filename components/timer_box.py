@@ -12,6 +12,7 @@ TIMER_WINDOW_WIDTH = 200
 TIMER_WINDOW_HEIGHT = 200
 NUM_IMAGES = 31
 DELAY = 8
+COUNTDOWN = 8
 
 
 class TimerWindow(ttk.Frame):
@@ -38,7 +39,7 @@ class TimerWindow(ttk.Frame):
         ]
         self.start_countdown_timer()
 
-    def start_countdown_timer(self, count=30):
+    def start_countdown_timer(self, count=COUNTDOWN):
         if count >= 0:
             if count == DELAY and not self.music_thread.is_alive():
                 self.music_thread.start()

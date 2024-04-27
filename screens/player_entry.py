@@ -146,6 +146,7 @@ class PlayerEntry(ttk.Frame):
         # Re-create the player entry screen
         player_entry_screen = PlayerEntry(self.parent, self.controller, self.db)
         player_entry_screen.grid(row=0, column=0, sticky="nsew")
+        game_manager.reset_game_manager()
 
     def on_button_press(self, key: str):
         """Handles UI button events"""
